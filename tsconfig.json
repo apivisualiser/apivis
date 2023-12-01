@@ -13,6 +13,7 @@
      */
     "allowJs": true,
     "checkJs": true,
+    "noImplicitAny": false,
     "isolatedModules": true
   },
   "include": ["src/**/*.ts", "src/**/*.js", "src/**/*.svelte"],
