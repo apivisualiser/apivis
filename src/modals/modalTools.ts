@@ -1,6 +1,6 @@
 import { openedModals } from '../stores';
 import { get } from 'svelte/store';
-import uuidv1 from 'uuid/v1';
+import { v1 as uuidv1 } from 'uuid';
 import _ from 'lodash';
 
 export function showModal(component, props = {}) {

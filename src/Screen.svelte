@@ -22,11 +22,11 @@
     import StatusBar from './widgets/StatusBar.svelte';
     import Snackbar from './widgets/Snackbar.svelte';
     import ModalLayer from './modals/ModalLayer.svelte';
-    import DragAndDropFileTarget from './DragAndDropFileTarget.svelte';
-    import dragDropFileTarget from './utility/dragDropFileTarget';
-    import TitleBar from './widgets/TitleBar.svelte';
+    // import DragAndDropFileTarget from './DragAndDropFileTarget.svelte';
+    // import dragDropFileTarget from './utility/dragDropFileTarget';
+    // import TitleBar from './widgets/TitleBar.svelte';
     import FontIcon from './icons/FontIcon.svelte';
-    import getElectron from './utility/getElectron';
+    // import getElectron from './utility/getElectron';
     import TabsContainer from './tabpanel/TabsContainer.svelte';
     import MultiTabsContainer from './tabpanel/MultiTabsContainer.svelte';
   
@@ -34,7 +34,7 @@
   
     $: themeStyle = `<st` + `yle id="themePlugin">${$currentThemeDefinition?.themeCss}</st` + `yle>`;
   
-    const isElectron = !!getElectron();
+    // const isElectron = !!getElectron();
   </script>
   
   <svelte:head>
@@ -43,23 +43,21 @@
     {/if}
   </svelte:head>
   
-  <div class="not-supported" class:isElectron>
+  <!-- <div class="not-supported" class:isElectron>
     <div class="m-5 big-icon"><FontIcon icon="img warn" /></div>
     <div class="m-3">Sorry, DbGate is not supported on mobile devices.</div>
     <div class="m-3">Please visit <a href="https://dbgate.org">DbGate web</a> for more info.</div>
-  </div>
+  </div> -->
   
   <div
     class={`${$currentTheme} ${currentThemeType} root dbgate-screen`}
-    class:isElectron
-    use:dragDropFileTarget
     on:contextmenu={e => e.preventDefault()}
   >
-    {#if $visibleTitleBar}
+    <!-- {#if $visibleTitleBar}
       <div class="titlebar">
         <TitleBar />
       </div>
-    {/if}
+    {/if} -->
     <div class="iconbar">
       <WidgetIconPanel />
     </div>

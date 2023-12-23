@@ -13,7 +13,7 @@
   import SelectField from '../forms/SelectField.svelte';
   import TextField from '../forms/TextField.svelte';
   import InlineButton from '../buttons/InlineButton.svelte';
-  import uuidv1 from 'uuid/v1';
+  import { v1 as uuidv1 } from 'uuid';
 
   import TableControl from './TableControl.svelte';
   import FormStyledButton from '../buttons/FormStyledButton.svelte';

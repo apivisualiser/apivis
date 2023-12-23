@@ -290,3 +290,17 @@ export const getCurrentSettings = () => currentSettingsValue || {};
 //   openedConnectionsValue = value;
 // });
 // export const getOpenedConnections = () => openedConnectionsValue;
+
+let commandsValue: any = null;
+commands.subscribe((value) => {
+  commandsValue = value;
+
+  // const electron = getElectron();
+  // if (electron) {
+  //   electron.send('update-commands', JSON.stringify(value));
+  // }
+});
+export const getCommands = () => commandsValue;
+
+const connectionList = writableWithStorage([], "connectionList");
+export const useConnectionList = () => connectionList;

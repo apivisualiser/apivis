@@ -221,7 +221,7 @@
     id: 'tabs.closeTab',
     category: 'Tabs',
     name: 'Close tab',
-    keyText: isElectronAvailable() ? 'CtrlOrCommand+W' : null,
+    // keyText: isElectronAvailable() ? 'CtrlOrCommand+W' : null,
     testEnabled: () => getOpenedTabs().filter(x => !x.closedTime).length >= 1,
     onClick: closeCurrentTab,
   });
@@ -242,19 +242,19 @@
     onClick: closeTabsButCurrentDb,
   });
 
-  registerCommand({
-    id: 'tabs.addToFavorites',
-    category: 'Tabs',
-    name: 'Add current tab to favorites',
-    // icon: 'icon favorite',
-    // toolbar: true,
-    testEnabled: () =>
-      getActiveTab()?.tabComponent &&
-      tabs[getActiveTab()?.tabComponent] &&
-      tabs[getActiveTab()?.tabComponent].allowAddToFavorites &&
-      tabs[getActiveTab()?.tabComponent].allowAddToFavorites(getActiveTab()?.props),
-    onClick: () => showModal(FavoriteModal, { savingTab: getActiveTab() }),
-  });
+  // registerCommand({
+  //   id: 'tabs.addToFavorites',
+  //   category: 'Tabs',
+  //   name: 'Add current tab to favorites',
+  //   // icon: 'icon favorite',
+  //   // toolbar: true,
+  //   testEnabled: () =>
+  //     getActiveTab()?.tabComponent &&
+  //     tabs[getActiveTab()?.tabComponent] &&
+  //     tabs[getActiveTab()?.tabComponent].allowAddToFavorites &&
+  //     tabs[getActiveTab()?.tabComponent].allowAddToFavorites(getActiveTab()?.props),
+  //   onClick: () => showModal(FavoriteModal, { savingTab: getActiveTab() }),
+  // });
 </script>
 
 <script lang="ts">
@@ -262,10 +262,10 @@
   import { tick } from 'svelte';
   import registerCommand from '../commands/registerCommand';
   import FontIcon from '../icons/FontIcon.svelte';
-  import FavoriteModal from '../modals/FavoriteModal.svelte';
+  // import FavoriteModal from '../modals/FavoriteModal.svelte';
   import { showModal } from '../modals/modalTools';
-  import newQuery from '../query/newQuery';
-  import appObjectTypes from '../appobj';
+  // import newQuery from '../query/newQuery';
+  // import appObjectTypes from '../appobj';
 
   import {
     currentDatabase,
@@ -281,17 +281,18 @@
     draggingDbGroupTarget,
     draggingTab,
     draggingTabTarget,
+    useConnectionList,
   } from '../stores';
   import tabs from '../tabs';
   import { setSelectedTab } from '../utility/common';
   import contextMenu from '../utility/contextMenu';
-  import getConnectionLabel from '../utility/getConnectionLabel';
-  import { isElectronAvailable } from '../utility/getElectron';
-  import { getConnectionInfo, useConnectionList } from '../utility/metadataLoaders';
+  // import getConnectionLabel from '../utility/getConnectionLabel';
+  // import { isElectronAvailable } from '../utility/getElectron';
+  // import { getConnectionInfo, useConnectionList } from '../utility/metadataLoaders';
   import { duplicateTab, getTabDbKey, sortTabs, groupTabs } from '../utility/openNewTab';
-  import { useConnectionColorFactory } from '../utility/useConnectionColor';
+  // import { useConnectionColorFactory } from '../utility/useConnectionColor';
   import TabCloseButton from '../elements/TabCloseButton.svelte';
-  import CloseTabModal from '../modals/CloseTabModal.svelte';
+  // import CloseTabModal from '../modals/CloseTabModal.svelte';
 
   export let multiTabIndex;
   export let shownTab;
@@ -324,7 +325,7 @@
   $: allowSplitTab =
     _.uniq(filteredTabsFromAllParts.map(x => x.multiTabIndex || 0)).length == 1 && filteredTabsFromAllParts.length >= 2;
 
-  const connectionColorFactory = useConnectionColorFactory(3, null, true);
+  // const connectionColorFactory = useConnectionColorFactory(3, null, true);
 
   const handleTabClick = (e, tabid) => {
     if (e.target.closest('.tabCloseButton')) {
@@ -343,7 +344,7 @@
   const getContextMenu = tab => () => {
     const { tabid, props, tabComponent, appObject, appObjectData } = tab;
 
-    const appobj = appObject ? appObjectTypes[appObject] : null;
+    // const appobj = appObject ? appObjectTypes[appObject] : null;
 
     return [
       {
@@ -362,24 +363,24 @@
         text: 'Duplicate',
         onClick: () => duplicateTab(tab),
       },
-      tabComponent &&
-        tabs[tabComponent] &&
-        tabs[tabComponent].allowAddToFavorites &&
-        tabs[tabComponent].allowAddToFavorites(props) && [
-          { divider: true },
-          {
-            text: 'Add to favorites',
-            onClick: () => showModal(FavoriteModal, { savingTab: tab }),
-          },
-        ],
-      { divider: true },
-      appobj &&
-        appobj.createAppObjectMenu &&
-        appobj.createTitle &&
-        appObjectData && {
-          text: appobj.createTitle(appObjectData),
-          submenu: appobj.createAppObjectMenu(appObjectData),
-        },
+      // tabComponent &&
+      //   tabs[tabComponent] &&
+      //   tabs[tabComponent].allowAddToFavorites &&
+        // tabs[tabComponent].allowAddToFavorites(props) && [
+        //   { divider: true },
+        //   {
+        //     text: 'Add to favorites',
+        //     onClick: () => showModal(FavoriteModal, { savingTab: tab }),
+        //   },
+        // ],
+      // { divider: true },
+      // appobj &&
+      //   appobj.createAppObjectMenu &&
+      //   appobj.createTitle &&
+      //   appObjectData && {
+      //     text: appobj.createTitle(appObjectData),
+      //     submenu: appobj.createAppObjectMenu(appObjectData),
+      //   },
     ];
   };
 
@@ -495,12 +496,6 @@
               }
             }}
             use:contextMenu={getDatabaseContextMenu(tabGroup.tabs)}
-            style={$connectionColorFactory(
-              tabGroup.tabs[0].props,
-              ($draggingDbGroup ? tabGroup.grpid == $draggingDbGroupTarget?.grpid : tabGroup.tabDbKey == currentDbKey)
-                ? 2
-                : 3
-            )}
             draggable={true}
             on:dragstart={e => {
               $draggingDbGroup = tabGroup;
