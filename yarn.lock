@@ -431,6 +431,11 @@ detect-indent@^6.1.0:
   resolved "https://registry.yarnpkg.com/detect-indent/-/detect-indent-6.1.0.tgz#592485ebbbf6b3b1ab2be175c8393d04ca0d57e6"
   integrity sha512-reYkTUJAZb9gUuZ2RvVCNhVHdg62RHnJ7WJl8ftMi4diZ6NWlciOzQN88pUhSELEwflJht4oQDv0F0BMlwaYtA==
 
+dexie@^4.0.1-beta.6:
+  version "4.0.1-beta.6"
+  resolved "https://registry.yarnpkg.com/dexie/-/dexie-4.0.1-beta.6.tgz#559dad1b6e7da7da5eb06b28df25fe2eb487bf01"
+  integrity sha512-NOexH4Rn8mrdSg/bn3YNFdPzQ1vPNxgPYLGWGU46z26NYGW1XmC0hhjjttwx9jYwba1K9Ypo1ZbZLNKtK6INSg==
+
 es6-promise@^3.1.2:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-3.3.1.tgz#a08cdde84ccdbf34d027a1451bc91d4bcd28a613"

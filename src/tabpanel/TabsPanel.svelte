@@ -281,7 +281,6 @@
     draggingDbGroupTarget,
     draggingTab,
     draggingTabTarget,
-    useConnectionList,
   } from '../stores';
   import tabs from '../tabs';
   import { setSelectedTab } from '../utility/common';
@@ -292,6 +291,7 @@
   import { duplicateTab, getTabDbKey, sortTabs, groupTabs } from '../utility/openNewTab';
   // import { useConnectionColorFactory } from '../utility/useConnectionColor';
   import TabCloseButton from '../elements/TabCloseButton.svelte';
+  import { useConnectionList } from '../utility/localdb';
   // import CloseTabModal from '../modals/CloseTabModal.svelte';
 
   export let multiTabIndex;

@@ -4,6 +4,7 @@ import invalidateCommands from "./commands/invalidateCommands";
 import _ from "lodash";
 import { safeJsonParse } from "./utility/stringTools";
 import { getThemes } from "./themes/themes";
+import type { ConnectionInfo } from "./utility/localdb";
 
 export interface TabDefinition {
   title: string;
@@ -86,7 +87,7 @@ export const collapsedConnectionGroupNames = writableWithStorage(
 export const openedConnections = writable([]);
 export const openedSingleDatabaseConnections = writable([]);
 export const expandedConnections = writable([]);
-export const currentDatabase = writable(null);
+export const currentDatabase = writable<ConnectionInfo | null>(null);
 export const openedTabs = writableWithForage<TabDefinition[]>(
   [],
   "openedTabs",
@@ -301,6 +302,3 @@ commands.subscribe((value) => {
   // }
 });
 export const getCommands = () => commandsValue;
-
-const connectionList = writableWithStorage([], "connectionList");
-export const useConnectionList = () => connectionList;

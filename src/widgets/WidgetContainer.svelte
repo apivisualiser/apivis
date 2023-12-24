@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { visibleSelectedWidget } from '../stores';
+  import { visibleSelectedWidget } from "../stores";
   // import ArchiveWidget from './ArchiveWidget.svelte';
-  // import DatabaseWidget from './DatabaseWidget.svelte';
+  import DatabaseWidget from "./DatabaseWidget.svelte";
   // import FilesWidget from './FilesWidget.svelte';
   // import PluginsWidget from './PluginsWidget.svelte';
   // import CellDataWidget from './CellDataWidget.svelte';
@@ -9,23 +9,23 @@
   // import AppWidget from './AppWidget.svelte';
 </script>
 
-<!-- <DatabaseWidget hidden={$visibleSelectedWidget != 'database'} />
+<DatabaseWidget hidden={$visibleSelectedWidget != "database"} />
 
-{#if $visibleSelectedWidget == 'file'}
+{#if $visibleSelectedWidget == "file"}
   <FilesWidget />
 {/if}
-{#if $visibleSelectedWidget == 'history'}
+{#if $visibleSelectedWidget == "history"}
   <HistoryWidget />
 {/if}
-{#if $visibleSelectedWidget == 'archive'}
+{#if $visibleSelectedWidget == "archive"}
   <ArchiveWidget />
 {/if}
-{#if $visibleSelectedWidget == 'plugins'}
+{#if $visibleSelectedWidget == "plugins"}
   <PluginsWidget />
 {/if}
-{#if $visibleSelectedWidget == 'cell-data'}
+{#if $visibleSelectedWidget == "cell-data"}
   <CellDataWidget />
 {/if}
-{#if $visibleSelectedWidget == 'app'}
+{#if $visibleSelectedWidget == "app"}
   <AppWidget />
 {/if} -->
