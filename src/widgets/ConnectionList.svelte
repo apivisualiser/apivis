@@ -5,7 +5,7 @@
   import WidgetsInnerContainer from './WidgetsInnerContainer.svelte';
   import SearchBoxWrapper from '../elements/SearchBoxWrapper.svelte';
   import AppObjectList from '../appobj/AppObjectList.svelte';
-  // import * as connectionAppObject from '../appobj/ConnectionAppObject.svelte';
+  import * as connectionAppObject from '../appobj/ConnectionAppObject.svelte';
   // import SubDatabaseList from '../appobj/SubDatabaseList.svelte';
   import {
     commandsCustomized,
@@ -134,7 +134,6 @@
   <AppObjectList
     list={_.sortBy(connectionsWithParent, connection => (getConnectionLabel(connection) || '').toUpperCase())}
     module={connectionAppObject}
-    subItemsComponent={SubDatabaseList}
     expandOnClick
     isExpandable={data => $openedConnections.includes(data._id) && !data.singleDatabase}
     {filter}
@@ -158,7 +157,6 @@
   <AppObjectList
     list={_.sortBy(connectionsWithoutParent, connection => (getConnectionLabel(connection) || '').toUpperCase())}
     module={connectionAppObject}
-    subItemsComponent={SubDatabaseList}
     expandOnClick
     isExpandable={data => $openedConnections.includes(data._id) && !data.singleDatabase}
     {filter}

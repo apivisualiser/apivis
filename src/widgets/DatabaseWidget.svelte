@@ -45,42 +45,12 @@
   </WidgetColumnBarItem>
 
   <WidgetColumnBarItem
-    title={driver?.databaseEngineTypes?.includes("document")
-      ? "Collections"
-      : "Tables, views, functions"}
+    title='Endpoints'
     name="dbObjects"
     storageName="dbObjectsWidget"
-    skip={!(
-      conid &&
-      (database || singleDatabase) &&
-      (driver?.databaseEngineTypes?.includes("sql") ||
-        driver?.databaseEngineTypes?.includes("document"))
-    )}
   >
-    <SqlObjectList {conid} {database} />
+    <!-- <SqlObjectList {conid} {database} /> -->
   </WidgetColumnBarItem>
 
-  <WidgetColumnBarItem
-    title={"Keys"}
-    name="dbObjects"
-    storageName="dbObjectsWidget"
-    skip={!(
-      conid &&
-      (database || singleDatabase) &&
-      driver?.databaseEngineTypes?.includes("keyvalue")
-    )}
-  >
-    <DbKeysTree {conid} {database} />
-  </WidgetColumnBarItem>
 
-  <WidgetColumnBarItem
-    title="Database content"
-    name="dbObjects"
-    storageName="dbObjectsWidget"
-    skip={conid && (database || singleDatabase)}
-  >
-    <WidgetsInnerContainer>
-      <ErrorInfo message="Database not selected" icon="img alert" />
-    </WidgetsInnerContainer>
-  </WidgetColumnBarItem>
 </WidgetColumnBar>

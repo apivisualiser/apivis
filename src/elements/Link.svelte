@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { openWebLink } from '../utility/exportFileTools';
+  // import { openWebLink } from '../utility/exportFileTools';
   import contextMenu from '../utility/contextMenu';
 
   export let href = undefined;
