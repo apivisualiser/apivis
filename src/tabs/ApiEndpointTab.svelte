@@ -24,21 +24,33 @@
   const values = writable<Record<string, string>>({});
 
   const apiInfo = useApiInfo(conid);
-  const endpoint = $apiInfo?.paths?.[path]?.[method];
+  $: endpoint = $apiInfo?.paths?.[path]?.[method];
 
   async function handleSend() {
     const connection = await getConnection(conid);
+    const params = new URLSearchParams();
+
+    let pathReplaced = path;
+
+    for (const param of endpoint?.parameters ?? []) {
+      if (isParameterObject(param)) {
+        if (param.in === 'query' && $values[param.name] != null) {
+          params.append(param.name, $values[param.name]);
+        }
+        if (param.in === 'path') {
+          pathReplaced = pathReplaced.replace(`{${param.name}}`, $values[param.name]);
+        }
+      }
+    }
+
     let url: URL;
     if (path.includes('://')) {
-      url = new URL(path);
+      url = new URL(pathReplaced);
     } else {
       url = new URL(connection?.openApiUrl!);
-      url.pathname = path;
+      url.pathname = pathReplaced;
     }
-    const params = new URLSearchParams();
-    for (const [key, value] of Object.entries($values)) {
-      params.append(key, value);
-    }
+
     url.search = params.toString();
     const resp = await fetch(url.toString());
     json = await resp.json();

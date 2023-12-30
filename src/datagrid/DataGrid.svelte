@@ -1,5 +1,6 @@
 <script lang="ts">
   import _ from 'lodash';
+  import DataGridCell from './DataGridCell.svelte';
 
   export let data: any;
 
@@ -18,22 +19,25 @@
   }
 
   $: topmostRows = extractTopmostRows(data);
+  $: columns = _.uniq(_.flatMap(topmostRows, Object.keys));
 </script>
 
 <div class="wrapper">
   <table>
     <thead>
       <tr>
-        {#each Object.keys(topmostRows[0]) as key}
+        <th></th>
+        {#each columns as key}
           <th>{key}</th>
         {/each}
       </tr>
     </thead>
     <tbody>
-      {#each topmostRows as row}
+      {#each topmostRows as row, index}
         <tr>
-          {#each Object.values(row) as value}
-            <td>{value}</td>
+          <td>{index + 1}</td>
+          {#each columns as key}
+            <DataGridCell data={row[key]} />
           {/each}
         </tr>
       {/each}
@@ -65,8 +69,8 @@
     border-top: 1px solid var(--theme-border);
   }
 
-
-  th {
+  th,
+  td {
     /* border: 1px solid var(--theme-border); */
     text-align: left;
     padding: 2px;
@@ -75,21 +79,12 @@
     overflow: hidden;
     vertical-align: center;
     z-index: 100;
-    font-weight: bold;
 
     border-bottom: 1px solid var(--theme-border);
     border-right: 1px solid var(--theme-border);
   }
 
-  td {
-    font-weight: normal;
-    /* border: 1px solid var(--theme-border); */
-    background-color: var(--theme-bg-0);
-    padding: 2px;
-    position: relative;
-    overflow: hidden;
-    vertical-align: top;
-    border-bottom: 1px solid var(--theme-border);
-    border-right: 1px solid var(--theme-border);
+  th {
+    font-weight: bold;
   }
 </style>
