@@ -12,6 +12,8 @@
   import { getConnection } from '../utility/localdb';
   import FormButton from '../forms/FormButton.svelte';
   import JSONTree from '../jsontree/JSONTree.svelte';
+  import TabControl from '../elements/TabControl.svelte';
+  import DataGrid from '../datagrid/DataGrid.svelte';
 
   export let path: string;
   export let conid: string;
@@ -44,21 +46,55 @@
 </script>
 
 <FormProviderCore template={FormFieldTemplateLarge} {values}>
-  <div>
+  <div class="flex-container">
     <div>
-      {#each filterParameterObjects($apiInfo?.paths[path]?.[method]?.parameters ?? []) as param}
-        <FormTextField name={param.name} label={param.name} required={param.required} />
-      {/each}
+      <div>
+        {#each filterParameterObjects($apiInfo?.paths[path]?.[method]?.parameters ?? []) as param}
+          <FormTextField name={param.name} label={param.name} required={param.required} />
+        {/each}
+      </div>
+
+      <div class="buttons">
+        <FormButton value="Send" on:click={handleSend} />
+      </div>
     </div>
 
-    <div>
-      <FormButton value="Send" on:click={handleSend} />
-    </div>
+    <TabControl
+      tabs={[
+        { label: 'JSON', slot: 1 },
+        { label: 'Data grid', slot: 2 },
+      ]}
+    >
+      <svelte:fragment slot="1">
+        {#if json}
+          <div class="json-container">
+            <JSONTree value={json} expanded />
+          </div>
+        {/if}
+      </svelte:fragment>
 
-    <div>
-      {#if json}
-        <JSONTree value={json} expanded />
-      {/if}
-    </div>
+      <svelte:fragment slot="2">
+        {#if json}
+          <DataGrid data={json} />
+        {/if}
+      </svelte:fragment>
+    </TabControl>
   </div>
 </FormProviderCore>
+
+<style>
+  .buttons {
+    flex-shrink: 0;
+    margin: var(--dim-large-form-margin);
+  }
+
+  .json-container {
+    overflow: scroll;
+  }
+
+  .flex-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+</style>
