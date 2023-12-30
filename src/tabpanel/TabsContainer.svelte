@@ -2,7 +2,7 @@
   import TabRegister from './TabRegister.svelte';
   import TabsPanel from './TabsPanel.svelte';
   import _ from 'lodash';
-  import { currentDatabase, lockedDatabaseMode, openedTabs, type TabDefinition } from '../stores';
+  import { currentConnection, lockedDatabaseMode, openedTabs, type TabDefinition } from '../stores';
   import { shouldShowTab } from './TabsPanel.svelte';
 
   export let multiTabIndex;
@@ -27,7 +27,7 @@
     return tabs[selectedIndex];
   }
 
-  $: shownTab = findShownTab($openedTabs, multiTabIndex, $lockedDatabaseMode, $currentDatabase);
+  $: shownTab = findShownTab($openedTabs, multiTabIndex, $lockedDatabaseMode, $currentConnection);
 </script>
 
 <div class="tabs">

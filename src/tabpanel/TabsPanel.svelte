@@ -5,7 +5,7 @@
     const lockedDbMode = lockedDbModeArg == getCurrentValueMarker ? getLockedDatabaseMode() : lockedDbModeArg;
 
     if (lockedDbMode) {
-      const currentDb = currentDbArg == getCurrentValueMarker ? getCurrentDatabase() : currentDbArg;
+      const currentDb = currentDbArg == getCurrentValueMarker ? getCurrentConnection() : currentDbArg;
       return (
         tab.closedTime == null &&
         (!tab.props?.conid ||
@@ -129,13 +129,13 @@
     );
   };
   const closeTabsWithCurrentDb = () => {
-    const db = getCurrentDatabase();
+    const db = getCurrentConnection();
     closeMultipleTabs(tab => {
       return db?.connection?._id == tab?.props?.conid && db?.name == tab?.props?.database;
     });
   };
   const closeTabsButCurrentDb = () => {
-    const db = getCurrentDatabase();
+    const db = getCurrentConnection();
     closeMultipleTabs(tab => {
       return db?.connection?._id != tab?.props?.conid || db?.name != tab?.props?.database;
     });
@@ -230,7 +230,7 @@
     id: 'tabs.closeTabsWithCurrentDb',
     category: 'Tabs',
     name: 'Close tabs with current DB',
-    testEnabled: () => getOpenedTabs().filter(x => !x.closedTime).length >= 1 && !!getCurrentDatabase(),
+    testEnabled: () => getOpenedTabs().filter(x => !x.closedTime).length >= 1 && !!getCurrentConnection(),
     onClick: closeTabsWithCurrentDb,
   });
 
@@ -238,7 +238,7 @@
     id: 'tabs.closeTabsButCurrentDb',
     category: 'Tabs',
     name: 'Close tabs but current DB',
-    testEnabled: () => getOpenedTabs().filter(x => !x.closedTime).length >= 1 && !!getCurrentDatabase(),
+    testEnabled: () => getOpenedTabs().filter(x => !x.closedTime).length >= 1 && !!getCurrentConnection(),
     onClick: closeTabsButCurrentDb,
   });
 
@@ -268,19 +268,19 @@
   // import appObjectTypes from '../appobj';
 
   import {
-    currentDatabase,
+    currentConnection,
     getActiveTab,
     getOpenedTabs,
     openedTabs,
     activeTabId,
     getActiveTabId,
-    getCurrentDatabase,
     lockedDatabaseMode,
     getLockedDatabaseMode,
     draggingDbGroup,
     draggingDbGroupTarget,
     draggingTab,
     draggingTabTarget,
+    getCurrentConnection,
   } from '../stores';
   import tabs from '../tabs';
   import { setSelectedTab } from '../utility/common';
@@ -298,14 +298,14 @@
   export let shownTab;
 
   $: showTabFilterFunc = tab =>
-    shouldShowTab(tab, $lockedDatabaseMode, $currentDatabase) && (tab.multiTabIndex || 0) == multiTabIndex;
+    shouldShowTab(tab, $lockedDatabaseMode, $currentConnection) && (tab.multiTabIndex || 0) == multiTabIndex;
   $: connectionList = useConnectionList();
 
   $: currentDbKey =
-    $currentDatabase && $currentDatabase.name && $currentDatabase.connection
-      ? `database://${$currentDatabase.name}-${$currentDatabase.connection._id}`
-      : $currentDatabase && $currentDatabase.connection
-      ? `server://${$currentDatabase.connection._id}`
+    $currentConnection && $currentConnection.name && $currentConnection.connection
+      ? `database://${$currentConnection.name}-${$currentConnection.connection._id}`
+      : $currentConnection && $currentConnection.connection
+      ? `server://${$currentConnection.connection._id}`
       : '_no';
 
   $: tabsWithDb = $openedTabs.filter(showTabFilterFunc).map(tab => ({
@@ -321,7 +321,7 @@
 
   $: scrollInViewTab($activeTabId);
 
-  $: filteredTabsFromAllParts = $openedTabs.filter(x => shouldShowTab(x, $lockedDatabaseMode, $currentDatabase));
+  $: filteredTabsFromAllParts = $openedTabs.filter(x => shouldShowTab(x, $lockedDatabaseMode, $currentConnection));
   $: allowSplitTab =
     _.uniq(filteredTabsFromAllParts.map(x => x.multiTabIndex || 0)).length == 1 && filteredTabsFromAllParts.length >= 2;
 
@@ -408,11 +408,11 @@
     if (conid) {
       const connection = await getConnectionInfo({ conid, database });
       if (connection) {
-        $currentDatabase = { connection, name: database };
+        $currentConnection = { connection, name: database };
         return;
       }
     }
-    $currentDatabase = null;
+    $currentConnection = null;
   };
 
   async function scrollInViewTab(tabid) {
@@ -575,7 +575,7 @@
               <span class="file-name">
                 {tab.title}
               </span>
-              {#if $lockedDatabaseMode && tab.props?.conid && tab.props?.conid != $currentDatabase?.connection?._id}
+              {#if $lockedDatabaseMode && tab.props?.conid && tab.props?.conid != $currentConnection?.connection?._id}
                 <FontIcon icon="img warn" padLeft title="This tab is bound to different server than actual DB" />
               {/if}
               <TabCloseButton unsaved={tab.unsaved} on:click={e => closeTab(tab.tabid)} />

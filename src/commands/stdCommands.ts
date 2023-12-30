@@ -1,5 +1,5 @@
 import {
-  currentDatabase,
+  // currentDatabase,
   currentTheme,
   emptyConnectionGroupNames,
   // extensions,

@@ -1,10 +1,10 @@
-import { writable, derived, readable } from "svelte/store";
-import localforage from "localforage";
-import invalidateCommands from "./commands/invalidateCommands";
-import _ from "lodash";
-import { safeJsonParse } from "./utility/stringTools";
-import { getThemes } from "./themes/themes";
-import type { ConnectionInfo } from "./utility/localdb";
+import { writable, derived, readable } from 'svelte/store';
+import localforage from 'localforage';
+import invalidateCommands from './commands/invalidateCommands';
+import _ from 'lodash';
+import { safeJsonParse } from './utility/stringTools';
+import { getThemes } from './themes/themes';
+import type { ConnectionInfo } from './utility/localdb';
 
 export interface TabDefinition {
   title: string;
@@ -22,25 +22,19 @@ export interface TabDefinition {
 
 export function writableWithStorage<T>(defaultValue: T, storageName) {
   const init = localStorage.getItem(storageName);
-  const res = writable<T>(
-    init ? safeJsonParse(init, defaultValue, true) : defaultValue
-  );
-  res.subscribe((value) => {
+  const res = writable<T>(init ? safeJsonParse(init, defaultValue, true) : defaultValue);
+  res.subscribe(value => {
     localStorage.setItem(storageName, JSON.stringify(value));
   });
   return res;
 }
 
-export function writableWithForage<T>(
-  defaultValue: T,
-  storageName,
-  safeConvertor?
-) {
+export function writableWithForage<T>(defaultValue: T, storageName, safeConvertor?) {
   const res = writable<T>(defaultValue);
-  res.subscribe((value) => {
+  res.subscribe(value => {
     localforage.setItem(storageName, value);
   });
-  localforage.getItem(storageName).then((value) => {
+  localforage.getItem(storageName).then(value => {
     if (value == null) {
       const migrated = localStorage.getItem(storageName);
       if (migrated) {
@@ -57,81 +51,43 @@ export function writableWithForage<T>(
 }
 
 function subscribeCssVariable(store, transform, cssVariable) {
-  store.subscribe((value) =>
-    document.documentElement.style.setProperty(cssVariable, transform(value))
-  );
+  store.subscribe(value => document.documentElement.style.setProperty(cssVariable, transform(value)));
 }
 
-export const selectedWidget = writableWithStorage("database", "selectedWidget");
-export const lockedDatabaseMode = writableWithStorage<boolean>(
-  false,
-  "lockedDatabaseMode"
-);
-export const visibleWidgetSideBar = writableWithStorage(
-  true,
-  "visibleWidgetSideBar"
-);
+export const selectedWidget = writableWithStorage('database', 'selectedWidget');
+export const lockedDatabaseMode = writableWithStorage<boolean>(false, 'lockedDatabaseMode');
+export const visibleWidgetSideBar = writableWithStorage(true, 'visibleWidgetSideBar');
 export const visibleSelectedWidget = derived(
   [selectedWidget, visibleWidgetSideBar],
-  ([$selectedWidget, $visibleWidgetSideBar]) =>
-    $visibleWidgetSideBar ? $selectedWidget : null
+  ([$selectedWidget, $visibleWidgetSideBar]) => ($visibleWidgetSideBar ? $selectedWidget : null)
 );
-export const emptyConnectionGroupNames = writableWithStorage(
-  [],
-  "emptyConnectionGroupNames"
-);
-export const collapsedConnectionGroupNames = writableWithStorage(
-  [],
-  "collapsedConnectionGroupNames"
-);
+export const emptyConnectionGroupNames = writableWithStorage([], 'emptyConnectionGroupNames');
+export const collapsedConnectionGroupNames = writableWithStorage([], 'collapsedConnectionGroupNames');
 export const openedConnections = writable([]);
 export const openedSingleDatabaseConnections = writable([]);
 export const expandedConnections = writable([]);
-export const currentDatabase = writable<ConnectionInfo | null>(null);
-export const openedTabs = writableWithForage<TabDefinition[]>(
-  [],
-  "openedTabs",
-  (x) => [...(x || [])]
-);
-export const copyRowsFormat = writableWithStorage(
-  "textWithoutHeaders",
-  "copyRowsFormat"
-);
+export const currentConnection = writable<ConnectionInfo | null>(null);
+export const openedTabs = writableWithForage<TabDefinition[]>([], 'openedTabs', x => [...(x || [])]);
+export const copyRowsFormat = writableWithStorage('textWithoutHeaders', 'copyRowsFormat');
 export const visibleCommandPalette = writable<any>(null);
 export const commands = writable({});
-export const currentTheme = writableWithStorage("theme-light", "currentTheme");
-export const currentEditorTheme = writableWithStorage(
-  null,
-  "currentEditorTheme"
-);
-export const currentEditorFontSize = writableWithStorage(
-  null,
-  "currentEditorFontSize"
-);
-export const currentEditorFont = writableWithStorage(null, "editor.fontFamily");
-export const activeTabId = derived(
-  [openedTabs],
-  ([$openedTabs]) => $openedTabs.find((x) => x.selected)?.tabid
-);
-export const activeTab = derived([openedTabs], ([$openedTabs]) =>
-  $openedTabs.find((x) => x.selected)
-);
-export const recentDatabases = writableWithStorage([], "recentDatabases");
-export const pinnedDatabases = writableWithStorage([], "pinnedDatabases");
-export const pinnedTables = writableWithStorage([], "pinnedTables");
+export const currentTheme = writableWithStorage('theme-light', 'currentTheme');
+export const currentEditorTheme = writableWithStorage(null, 'currentEditorTheme');
+export const currentEditorFontSize = writableWithStorage(null, 'currentEditorFontSize');
+export const currentEditorFont = writableWithStorage(null, 'editor.fontFamily');
+export const activeTabId = derived([openedTabs], ([$openedTabs]) => $openedTabs.find(x => x.selected)?.tabid);
+export const activeTab = derived([openedTabs], ([$openedTabs]) => $openedTabs.find(x => x.selected));
+export const recentDatabases = writableWithStorage([], 'recentDatabases');
+export const pinnedDatabases = writableWithStorage([], 'pinnedDatabases');
+export const pinnedTables = writableWithStorage([], 'pinnedTables');
 export const commandsSettings = writable({});
-export const allResultsInOneTabDefault = writableWithStorage(
-  false,
-  "allResultsInOneTabDefault"
-);
-export const commandsCustomized = derived(
-  [commands, commandsSettings],
-  ([$commands, $commandsSettings]) =>
-    _.mapValues($commands, (v, k) => ({
-      // @ts-ignore
-      ...v,
-      ...$commandsSettings[k],
-    }))
+export const allResultsInOneTabDefault = writableWithStorage(false, 'allResultsInOneTabDefault');
+export const commandsCustomized = derived([commands, commandsSettings], ([$commands, $commandsSettings]) =>
+  _.mapValues($commands, (v, k) => ({
+    // @ts-ignore
+    ...v,
+    ...$commandsSettings[k],
+  }))
 );
 
 export const draggingTab = writable(null);
@@ -141,29 +97,24 @@ export const draggingDbGroupTarget = writable(null);
 
 // export const visibleToolbar = writableWithStorage(true, 'visibleToolbar');
 export const visibleToolbar = writable(false);
-export const leftPanelWidth = writableWithStorage(300, "leftPanelWidth");
+export const leftPanelWidth = writableWithStorage(300, 'leftPanelWidth');
 export const currentDropDownMenu = writable<any>(null);
 export const openedModals = writable([]);
 export const draggedPinnedObject = writable(null);
 export const openedSnackbars = writable([]);
 export const nullStore = readable(null, () => {});
-export const currentArchive = writableWithStorage("default", "currentArchive");
-export const currentApplication = writableWithStorage(
-  null,
-  "currentApplication"
-);
+export const currentArchive = writableWithStorage('default', 'currentArchive');
+export const currentApplication = writableWithStorage(null, 'currentApplication');
 export const isFileDragActive = writable(false);
 export const selectedCellsCallback = writable(null);
 export const loadingPluginStore = writable({
   loaded: false,
   loadingPackageName: null,
 });
-export const activeDbKeysStore = writableWithStorage({}, "activeDbKeysStore");
+export const activeDbKeysStore = writableWithStorage({}, 'activeDbKeysStore');
 
-export const currentThemeDefinition = derived(
-  [currentTheme],
-  ([$currentTheme]) =>
-    getThemes().find((x) => x.themeClassName == $currentTheme)
+export const currentThemeDefinition = derived([currentTheme], ([$currentTheme]) =>
+  getThemes().find(x => x.themeClassName == $currentTheme)
 );
 
 export const visibleTitleBar = writable(false);
@@ -193,54 +144,42 @@ export const visibleHamburgerMenuWidget = writable(false);
 //   }
 // );
 
-subscribeCssVariable(
-  visibleSelectedWidget,
-  (x) => (x ? 1 : 0),
-  "--dim-visible-left-panel"
-);
+subscribeCssVariable(visibleSelectedWidget, x => (x ? 1 : 0), '--dim-visible-left-panel');
 // subscribeCssVariable(visibleToolbar, x => (x ? 1 : 0), '--dim-visible-toolbar');
-subscribeCssVariable(leftPanelWidth, (x) => `${x}px`, "--dim-left-panel-width");
-subscribeCssVariable(
-  visibleTitleBar,
-  (x) => (x ? 1 : 0),
-  "--dim-visible-titlebar"
-);
-subscribeCssVariable(
-  lockedDatabaseMode,
-  (x) => (x ? 0 : 1),
-  "--dim-visible-tabs-databases"
-);
+subscribeCssVariable(leftPanelWidth, x => `${x}px`, '--dim-left-panel-width');
+subscribeCssVariable(visibleTitleBar, x => (x ? 1 : 0), '--dim-visible-titlebar');
+subscribeCssVariable(lockedDatabaseMode, x => (x ? 0 : 1), '--dim-visible-tabs-databases');
 
 let activeTabIdValue: string | null = null;
-activeTabId.subscribe((value) => {
+activeTabId.subscribe(value => {
   activeTabIdValue = value ?? null;
   invalidateCommands();
 });
 export const getActiveTabId = () => activeTabIdValue;
 
 let visibleCommandPaletteValue = null;
-visibleCommandPalette.subscribe((value) => {
+visibleCommandPalette.subscribe(value => {
   visibleCommandPaletteValue = value;
   invalidateCommands();
 });
 export const getVisibleCommandPalette = () => visibleCommandPaletteValue;
 
 let visibleToolbarValue: boolean | null = null;
-visibleToolbar.subscribe((value) => {
+visibleToolbar.subscribe(value => {
   visibleToolbarValue = value;
   invalidateCommands();
 });
 export const getVisibleToolbar = () => visibleToolbarValue;
 
 let openedTabsValue: TabDefinition[] = [];
-openedTabs.subscribe((value) => {
+openedTabs.subscribe(value => {
   openedTabsValue = value;
   invalidateCommands();
 });
 export const getOpenedTabs = () => openedTabsValue;
 
 let activeTabValue: TabDefinition | null = null;
-activeTab.subscribe((value) => {
+activeTab.subscribe(value => {
   activeTabValue = value ?? null;
 });
 export const getActiveTab = () => activeTabValue;
@@ -261,14 +200,14 @@ export const getCurrentConfig = () => currentConfigValue;
 // export const getPinnedDatabases = () => _.compact(pinnedDatabasesValue);
 
 let lockedDatabaseModeValue: boolean | null = null;
-lockedDatabaseMode.subscribe((value) => {
+lockedDatabaseMode.subscribe(value => {
   lockedDatabaseModeValue = value;
 });
 export const getLockedDatabaseMode = () => lockedDatabaseModeValue;
 
-let currentDatabaseValue = null;
-currentDatabase.subscribe((value) => {
-  currentDatabaseValue = value;
+let currentConnectionValue: ConnectionInfo | null = null;
+currentConnection.subscribe(value => {
+  currentConnectionValue = value;
   // if (value?.connection?._id) {
   //   if (value?.connection?.singleDatabase) {
   //     openedSingleDatabaseConnections.update((x) =>
@@ -281,7 +220,7 @@ currentDatabase.subscribe((value) => {
   // }
   invalidateCommands();
 });
-export const getCurrentDatabase = () => currentDatabaseValue;
+export const getCurrentConnection = () => currentConnectionValue;
 
 let currentSettingsValue = null;
 export const getCurrentSettings = () => currentSettingsValue || {};
@@ -293,7 +232,7 @@ export const getCurrentSettings = () => currentSettingsValue || {};
 // export const getOpenedConnections = () => openedConnectionsValue;
 
 let commandsValue: any = null;
-commands.subscribe((value) => {
+commands.subscribe(value => {
   commandsValue = value;
 
   // const electron = getElectron();

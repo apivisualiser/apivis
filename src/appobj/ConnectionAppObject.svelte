@@ -4,7 +4,8 @@
   import getConnectionLabel from '../utility/getConnectionLabel';
   import { saveConnection, type ConnectionInfo, deleteConnection } from '../utility/localdb';
   import AppObjectCore from './AppObjectCore.svelte';
-  import {v1 as uuidv1} from 'uuid';
+  import { v1 as uuidv1 } from 'uuid';
+  import { currentConnection } from '../stores';
 
   export let data: ConnectionInfo;
 
@@ -36,4 +37,10 @@
   }
 </script>
 
-<AppObjectCore title={getConnectionLabel(data)} icon="img server" menu={getContextMenu} />
+<AppObjectCore
+  title={getConnectionLabel(data)}
+  icon="img server"
+  menu={getContextMenu}
+  on:click={() => (currentConnection.set(data))}
+  isBold={$currentConnection?.id == data.id}
+/>

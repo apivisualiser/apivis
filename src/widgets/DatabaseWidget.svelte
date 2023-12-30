@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { currentDatabase, pinnedDatabases, pinnedTables } from "../stores";
+  import { currentConnection, pinnedDatabases, pinnedTables } from "../stores";
   // import { useConfig, useConnectionInfo } from "../utility/metadataLoaders";
 
   import ConnectionList from "./ConnectionList.svelte";
@@ -17,9 +17,9 @@
 
   export let hidden = false;
 
-  $: conid = $currentDatabase?.id;
+  $: conid = $currentConnection?.id;
   $: connection = useConnectionInfo({ conid });
-  $: database = $currentDatabase?.name;
+  $: database = $currentConnection?.name;
 </script>
 
 <WidgetColumnBar {hidden}>
@@ -36,10 +36,10 @@
     name="pinned"
     height="15%"
     storageName="pinnedItemsWidget"
-    skip={!_.compact($pinnedDatabases).length &&
+    <!-- skip={!_.compact($pinnedDatabases).length &&
       !$pinnedTables.some(
-        (x) => x && x.conid == conid && x.database == $currentDatabase?.name
-      )}
+        (x) => x && x.conid == conid && x.database == $currentConnection?.name
+      )} -->
   >
     <PinnedObjectsList />
   </WidgetColumnBarItem>
