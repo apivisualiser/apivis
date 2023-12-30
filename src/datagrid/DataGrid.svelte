@@ -37,7 +37,7 @@
         <tr>
           <td>{index + 1}</td>
           {#each columns as key}
-            <DataGridCell data={row[key]} />
+            <DataGridCell rowData={row} value={row[key]} />
           {/each}
         </tr>
       {/each}

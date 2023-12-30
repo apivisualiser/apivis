@@ -1,5 +1,8 @@
 <script lang="ts">
-  export let data: any;
+  import CellValue from './CellValue.svelte';
+
+  export let rowData: any;
+  export let value: any;
 
   let domCell;
 </script>
@@ -7,12 +10,14 @@
 <td
   bind:this={domCell}
   on:click={() => {
-    const range = document.createRange();
-    range.selectNode(domCell);
-    window.getSelection()?.removeAllRanges();
-    window.getSelection()?.addRange(range);
-  }}>{data}</td
+    // const range = document.createRange();
+    // range.selectNode(domCell);
+    // window.getSelection()?.removeAllRanges();
+    // window.getSelection()?.addRange(range);
+  }}
 >
+  <CellValue {rowData} {value} />
+</td>
 
 <style>
   td {
