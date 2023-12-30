@@ -14,7 +14,6 @@ export async function loadOpenApiDocument(url: string): Promise<OpenAPIObject> {
   apiDocCache.set(url, json);
   return json;
 
-
   // return fetch(url)
   //   .then(response => response.json())
   //   .then(json => json as OpenAPIObject);
@@ -22,13 +21,23 @@ export async function loadOpenApiDocument(url: string): Promise<OpenAPIObject> {
 
 export function useCurrentApiInfo(): Readable<OpenAPIObject> {
   return {
-    subscribe: (callback) => {
+    subscribe: callback => {
       return currentConnection.subscribe(connection => {
         if (connection) {
           loadOpenApiDocument(connection.openApiUrl).then(callback);
         }
       });
-    }
-  }
+    },
+  };
+  // currentConnection.
+}
+
+export function useApiInfo(url: string): Readable<OpenAPIObject> {
+  return {
+    subscribe: callback => {
+      loadOpenApiDocument(url).then(callback);
+      return () => {};
+    },
+  };
   // currentConnection.
 }
