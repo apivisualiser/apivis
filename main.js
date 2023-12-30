@@ -20,10 +20,10 @@ const createWindow = () => {
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 
+  // simulate CORS
   mainWindow.webContents.session.webRequest.onBeforeSendHeaders((details, callback) => {
     callback({ requestHeaders: { Origin: '*', ...details.requestHeaders } });
   });
-
   mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
     callback({
       responseHeaders: {

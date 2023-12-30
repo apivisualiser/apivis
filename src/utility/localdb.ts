@@ -29,6 +29,10 @@ export function useConnectionInfo({ conid }) {
   return liveQuery(() => localDb.connections.get(conid));
 }
 
+export function getConnection(conid: string) {
+  return localDb.connections.get(conid);
+}
+
 export async function saveConnection(conn: ConnectionInfo) {
   await localDb.connections.put(conn);
 }

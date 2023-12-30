@@ -1,6 +1,7 @@
-import { type OpenAPIObject, OpenApiBuilder } from 'openapi3-ts/oas30';
+import { type OpenAPIObject, OpenApiBuilder, type ReferenceObject, type ParameterObject } from 'openapi3-ts/oas30';
 import { currentConnection } from '../stores';
 import type { Readable } from 'svelte/store';
+import { getConnection } from '../utility/localdb';
 
 const apiDocCache = new Map<string, OpenAPIObject>();
 
@@ -29,15 +30,25 @@ export function useCurrentApiInfo(): Readable<OpenAPIObject> {
       });
     },
   };
-  // currentConnection.
 }
 
-export function useApiInfo(url: string): Readable<OpenAPIObject> {
+export function useApiInfo(conid: string): Readable<OpenAPIObject> {
   return {
     subscribe: callback => {
-      loadOpenApiDocument(url).then(callback);
+      getConnection(conid).then(connection => {
+        if (connection) {
+          loadOpenApiDocument(connection.openApiUrl).then(callback);
+        }
+      });
       return () => {};
     },
   };
-  // currentConnection.
+}
+
+export function isParameterObject(obj: ReferenceObject | ParameterObject): obj is ParameterObject {
+  return !!(obj as ParameterObject).name;
+}
+
+export function filterParameterObjects(parameters: Array<ReferenceObject | ParameterObject>): ParameterObject[] {
+  return parameters.filter(isParameterObject);
 }
