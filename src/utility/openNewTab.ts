@@ -152,14 +152,8 @@ export function getTabDbKey(tab) {
   if (tab.tabComponent == 'ConnectionTab') {
     return 'connections.';
   }
-  if (tab.props && tab.props.conid && tab.props.database) {
-    return `database://${tab.props.database}-${tab.props.conid}`;
-  }
   if (tab.props && tab.props.conid) {
-    return `server://${tab.props.conid}`;
-  }
-  if (tab.props && tab.props.archiveFolder) {
-    return `archive://${tab.props.archiveFolder}`;
+    return `connection://${tab.props.conid}`;
   }
   return null;
 }

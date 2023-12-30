@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-  export const matchingProps = ['conid', 'path'];
+  export const matchingProps = ['conid', 'path', 'method'];
 </script>
 
 <script lang="ts">
@@ -15,13 +15,14 @@
 
   export let path: string;
   export let conid: string;
+  export let method: string;
 
   let json;
 
   const values = writable<Record<string, string>>({});
 
   const apiInfo = useApiInfo(conid);
-  const endpoint = $apiInfo?.paths?.[path]?.get;
+  const endpoint = $apiInfo?.paths?.[path]?.[method];
 
   async function handleSend() {
     const connection = await getConnection(conid);
@@ -45,7 +46,7 @@
 <FormProviderCore template={FormFieldTemplateLarge} {values}>
   <div>
     <div>
-      {#each filterParameterObjects($apiInfo?.paths[path]?.get?.parameters ?? []) as param}
+      {#each filterParameterObjects($apiInfo?.paths[path]?.[method]?.parameters ?? []) as param}
         <FormTextField name={param.name} label={param.name} required={param.required} />
       {/each}
     </div>

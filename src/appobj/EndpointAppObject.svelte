@@ -3,12 +3,15 @@
   import AppObjectCore from './AppObjectCore.svelte';
   import openNewTab from '../utility/openNewTab';
   import type { ApiDocEndpoint } from '../openapi/openapidoc';
+  import getConnectionLabel from '../utility/getConnectionLabel';
+  import { getConnection } from '../utility/localdb';
 
   export let endpoint: ApiDocEndpoint;
   export let apiInfo: OpenAPIObject;
   export let conid;
 
-  function handleClick() {
+  async function handleClick() {
+    const connection = await getConnection(conid);
     openNewTab({
       title: endpoint.path,
       icon: 'mtd ' + endpoint.method,
@@ -17,6 +20,7 @@
         path: endpoint.path,
         method: endpoint.method,
         conid,
+        connectionLabel: getConnectionLabel(connection),
       },
     });
   }
