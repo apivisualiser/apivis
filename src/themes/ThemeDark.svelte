@@ -69,6 +69,10 @@
     --theme-icon-gold: #e8b339;
     --theme-icon-yellow: #e8d639;
     --theme-icon-magenta: #e0529c;
+    --theme-icon-cyan: #3c9ae8;
+    --theme-icon-purple: #b36ae0;
+    --theme-icon-orange: #e88b39;
+
 
     --theme-icon-inv-green: #8fd460;
     --theme-icon-inv-red: #e84749;

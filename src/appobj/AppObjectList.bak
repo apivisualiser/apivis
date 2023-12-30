@@ -1,10 +1,10 @@
 <script>
   import _, { sortBy } from 'lodash';
   import { asyncFilter } from '../utility/common';
-  import AppObjectGroup from './AppObjectGroup.svelte';
+  import AppObjectGroup from './AppObjectGroup.bak';
   import { plusExpandIcon } from '../icons/expandIcons';
 
-  import AppObjectListItem from './AppObjectListItem.svelte';
+  import AppObjectListItem from './AppObjectListItem.bal';
   import { writable } from 'svelte/store';
 
   export let list;

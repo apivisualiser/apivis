@@ -2,22 +2,24 @@
   import type { OpenAPIObject, PathItemObject } from 'openapi3-ts/oas30';
   import AppObjectCore from './AppObjectCore.svelte';
   import openNewTab from '../utility/openNewTab';
+  import type { ApiDocEndpoint } from '../openapi/openapidoc';
 
-  export let path: string;
+  export let endpoint: ApiDocEndpoint;
   export let apiInfo: OpenAPIObject;
   export let conid;
 
   function handleClick() {
     openNewTab({
-      title: path,
-      icon: 'img shell',
+      title: endpoint.path,
+      icon: 'mtd ' + endpoint.method,
       tabComponent: 'ApiEndpointTab',
       props: {
-        path,
+        path: endpoint.path,
+        method: endpoint.method,
         conid,
-      }
+      },
     });
   }
 </script>
 
-<AppObjectCore title={path} on:click={handleClick} />
+<AppObjectCore title={endpoint.path} on:click={handleClick} icon={'mtd ' + endpoint.method} />

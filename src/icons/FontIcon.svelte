@@ -1,5 +1,5 @@
-<script>
-  export let icon;
+<script lang="ts">
+  export let icon: string = '';
   export let title = null;
   export let padLeft = false;
   export let padRight = false;
@@ -230,9 +230,61 @@
     'img import': 'mdi mdi-database-import color-icon-green',
     'img export': 'mdi mdi-database-export color-icon-green',
   };
+
+  function getMethodShort(mtd: string) {
+    switch (mtd.toLowerCase()) {
+      case 'get':
+        return 'GET';
+      case 'post':
+        return 'POST';
+      case 'put':
+        return 'PUT';
+      case 'delete':
+        return 'DEL';
+      case 'patch':
+        return 'PATCH';
+      case 'options':
+        return 'OPT';
+      case 'head':
+        return 'HEAD';
+      case 'trace':
+        return 'TRACE';
+      default:
+        return mtd;
+    }
+  }
+
+  function getMethodColor(mtd: string) {
+    switch (mtd.toLowerCase()) {
+      case 'get':
+        return 'color-icon-green';
+      case 'post':
+        return 'color-icon-blue';
+      case 'put':
+        return 'color-icon-yellow';
+      case 'delete':
+        return 'color-icon-red';
+      case 'patch':
+        return 'color-icon-magenta';
+      case 'options':
+        return 'color-icon-cyan';
+      case 'head':
+        return 'color-icon-purple';
+      case 'trace':
+        return 'color-icon-orange';
+      default:
+        return '';
+    }
+  }
 </script>
 
-<span class={iconNames[icon] || icon} {title} class:padLeft class:padRight {style} on:click />
+{#if icon?.startsWith && icon?.startsWith('mtd ')}
+  <span class={getMethodColor(icon.substring(4))} {title} class:padLeft class:padRight {style} on:click
+    >{getMethodShort(icon.substring(4))}</span
+  >
+{:else}
+  <span class={iconNames[icon] || icon} {title} class:padLeft class:padRight {style} on:click />
+{/if}
 
 <style>
   .padLeft {
