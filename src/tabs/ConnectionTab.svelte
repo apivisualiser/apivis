@@ -28,7 +28,7 @@
   import { changeTab } from '../utility/common';
   import getConnectionLabel from '../utility/getConnectionLabel';
   import { onMount } from 'svelte';
-  import { disconnectServerConnection, openConnection } from '../appobj/ConnectionAppObject.svelte';
+  // import { disconnectServerConnection, openConnection } from '../appobj/ConnectionAppObject.svelte';
   import { saveConnection } from '../utility/localdb';
   // import { disconnectDatabaseConnection } from '../appobj/DatabaseAppObject.svelte';
   import { v1 as uuidv1 } from 'uuid';

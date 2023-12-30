@@ -4,6 +4,7 @@ import { liveQuery } from "dexie";
 export interface ConnectionInfo {
   id: string;
   url: string;
+  displayName?: string;
 }
 
 class ApiManDb extends Dexie {
@@ -30,4 +31,8 @@ export function useConnectionInfo({ conid }) {
 
 export async function saveConnection(conn: ConnectionInfo) {
   await localDb.connections.put(conn);
+}
+
+export async function deleteConnection(conid: string) {
+  await localDb.connections.delete(conid);
 }

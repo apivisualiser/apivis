@@ -5,7 +5,7 @@
   import WidgetsInnerContainer from './WidgetsInnerContainer.svelte';
   import SearchBoxWrapper from '../elements/SearchBoxWrapper.svelte';
   import AppObjectList from '../appobj/AppObjectList.svelte';
-  import * as connectionAppObject from '../appobj/ConnectionAppObject.svelte';
+  // import * as connectionAppObject from '../appobj/ConnectionAppObject.svelte';
   // import SubDatabaseList from '../appobj/SubDatabaseList.svelte';
   import {
     commandsCustomized,
@@ -28,7 +28,9 @@
   import { showModal } from '../modals/modalTools';
   import InputTextModal from '../modals/InputTextModal.svelte';
   import ConfirmModal from '../modals/ConfirmModal.svelte';
-  import { useConnectionList } from '../utility/localdb';
+  import { saveConnection, useConnectionList } from '../utility/localdb';
+  import AppObjectCore from '../appobj/AppObjectCore.svelte';
+  import ConnectionAppObject from '../appobj/ConnectionAppObject.svelte';
 
   const connections = useConnectionList();
   // const serverStatus = useServerStatus();
@@ -106,6 +108,7 @@
       { text: 'Delete', onClick: handleDelete },
     ];
   }
+
 </script>
 
 <SearchBoxWrapper>
@@ -131,41 +134,10 @@
     }
   }}
 >
-  <AppObjectList
-    list={_.sortBy(connectionsWithParent, connection => (getConnectionLabel(connection) || '').toUpperCase())}
-    module={connectionAppObject}
-    expandOnClick
-    isExpandable={data => $openedConnections.includes(data._id) && !data.singleDatabase}
-    {filter}
-    passProps={{  showPinnedInsteadOfUnpin: true }}
-    getIsExpanded={data => $expandedConnections.includes(data._id) && !data.singleDatabase}
-    setIsExpanded={(data, value) => {
-      expandedConnections.update(old => (value ? [...old, data._id] : old.filter(x => x != data._id)));
-    }}
-    groupIconFunc={chevronExpandIcon}
-    groupFunc={data => data.parent}
-    expandIconFunc={plusExpandIcon}
-    onDropOnGroup={handleDropOnGroup}
-    emptyGroupNames={$emptyConnectionGroupNames}
-    sortGroups
-    groupContextMenu={createGroupContextMenu}
-    collapsedGroupNames={collapsedConnectionGroupNames}
-  />
-  {#if (connectionsWithParent?.length > 0 && connectionsWithoutParent?.length > 0) || ($emptyConnectionGroupNames.length > 0 && connectionsWithoutParent?.length > 0)}
-    <div class="br" />
-  {/if}
-  <AppObjectList
-    list={_.sortBy(connectionsWithoutParent, connection => (getConnectionLabel(connection) || '').toUpperCase())}
-    module={connectionAppObject}
-    expandOnClick
-    isExpandable={data => $openedConnections.includes(data._id) && !data.singleDatabase}
-    {filter}
-    passProps={{  showPinnedInsteadOfUnpin: true }}
-    getIsExpanded={data => $expandedConnections.includes(data._id) && !data.singleDatabase}
-    setIsExpanded={(data, value) => {
-      expandedConnections.update(old => (value ? [...old, data._id] : old.filter(x => x != data._id)));
-    }}
-  />
+  {#each $connections || [] as connectionItem}
+  <ConnectionAppObject data={connectionItem} />
+    
+  {/each}
   {#if $connections && !$connections.find(x => !x.unsaved) && $openedConnections.length == 0 && $commandsCustomized['new.connection']?.enabled && !$openedTabs.find(x => !x.closedTime && x.tabComponent == 'ConnectionTab' && !x.props?.conid)}
     <LargeButton icon="icon new-connection" on:click={() => runCommand('new.connection')} fillHorizontal
       >Add new connection</LargeButton

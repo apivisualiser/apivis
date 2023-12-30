@@ -17,7 +17,7 @@
   export let statusIconBefore = undefined;
   export let statusTitle = undefined;
   export let extInfo = undefined;
-  export let menu = undefined;
+  export let menu: any = undefined;
   export let expandIcon = undefined;
   export let checkedObjectsStore = null;
   export let disableContextMenu = false;
@@ -62,7 +62,7 @@
     }
   }
 
-  // $: console.log(title, indentLevel);
+  $: console.log(title, indentLevel);
 </script>
 
 <div
