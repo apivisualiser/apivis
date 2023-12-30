@@ -3,7 +3,7 @@ import { liveQuery } from "dexie";
 
 export interface ConnectionInfo {
   id: string;
-  url: string;
+  openApiUrl: string;
   displayName?: string;
 }
 

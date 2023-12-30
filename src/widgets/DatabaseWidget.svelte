@@ -14,6 +14,7 @@
   // import SingleConnectionDatabaseList from "./SingleConnectionDatabaseList.svelte";
   import _ from "lodash";
   import { useConnectionInfo } from "../utility/localdb";
+  import EndpointList from "./EndpointList.svelte";
 
   export let hidden = false;
 
@@ -49,6 +50,7 @@
     name="dbObjects"
     storageName="dbObjectsWidget"
   >
+  <EndpointList />
     <!-- <SqlObjectList {conid} {database} /> -->
   </WidgetColumnBarItem>
 
