@@ -100,7 +100,7 @@
   // import getElectron from '../utility/getElectron';
   import getConnectionLabel from '../utility/getConnectionLabel';
   // import { getDatabaseList, useUsedApps } from '../utility/metadataLoaders';
-  // import { getLocalStorage } from '../utility/storageCache';
+  import { getLocalStorage } from '../utility/storageCache';
   // import { apiCall, removeVolatileMapping } from '../utility/api';
   // import ImportDatabaseDumpModal from '../modals/ImportDatabaseDumpModal.svelte';
   import { closeMultipleTabs } from '../tabpanel/TabsPanel.svelte';
@@ -164,131 +164,118 @@
   };
 
   const getContextMenu = () => {
-    const driver = $extensions.drivers.find(x => x.engine == data.engine);
-    const config = getCurrentConfig();
-    const handleRefresh = () => {
-      apiCall('server-connections/refresh', { conid: data._id });
-    };
-    const handleDisconnect = () => {
-      disconnectServerConnection(data._id);
-    };
-    const handleDelete = () => {
-      showModal(ConfirmModal, {
-        message: `Really delete connection ${getConnectionLabel(data)}?`,
-        onConfirm: () => apiCall('connections/delete', data),
-      });
-    };
-    const handleDuplicate = () => {
-      apiCall('connections/save', {
-        ...data,
-        _id: undefined,
-        displayName: `${getConnectionLabel(data)} - copy`,
-      });
-    };
-    const handleCreateDatabase = () => {
-      showModal(InputTextModal, {
-        header: 'Create database',
-        value: 'newdb',
-        label: 'Database name',
-        onConfirm: name =>
-          apiCall('server-connections/create-database', {
-            conid: data._id,
-            name,
-          }),
-      });
-    };
-    const handleServerSummary = () => {
-      openNewTab({
-        title: getConnectionLabel(data),
-        icon: 'img server',
-        tabComponent: 'ServerSummaryTab',
-        props: {
-          conid: data._id,
-        },
-      });
-    };
-    const handleNewQuery = () => {
-      const tooltip = `${getConnectionLabel(data)}`;
-      openNewTab({
-        title: 'Query #',
-        icon: 'img sql-file',
-        tooltip,
-        tabComponent: 'QueryTab',
-        props: {
-          conid: data._id,
-        },
-      });
-    };
+    return [];
 
-    return [
-      config.runAsPortal == false && [
-        {
-          text: $openedConnections.includes(data._id) ? 'View details' : 'Edit',
-          onClick: handleOpenConnectionTab,
-        },
-        !$openedConnections.includes(data._id) && {
-          text: 'Delete',
-          onClick: handleDelete,
-        },
-        {
-          text: 'Duplicate',
-          onClick: handleDuplicate,
-        },
-      ],
-      !data.singleDatabase && [
-        !$openedConnections.includes(data._id) && {
-          text: 'Connect',
-          onClick: handleConnect,
-        },
-        { onClick: handleNewQuery, text: 'New query', isNewQuery: true },
-        $openedConnections.includes(data._id) &&
-          data.status && {
-            text: 'Refresh',
-            onClick: handleRefresh,
-          },
-        $openedConnections.includes(data._id) && {
-          text: 'Disconnect',
-          onClick: handleDisconnect,
-        },
-        $openedConnections.includes(data._id) &&
-          driver?.supportedCreateDatabase &&
-          !data.isReadOnly && {
-            text: 'Create database',
-            onClick: handleCreateDatabase,
-          },
-        driver?.supportsServerSummary && {
-          text: 'Server summary',
-          onClick: handleServerSummary,
-        },
-      ],
-      data.singleDatabase && [
-        { divider: true },
-        getDatabaseMenuItems(
-          data,
-          data.defaultDatabase,
-          $extensions,
-          $currentDatabase,
-          $apps,
-          $openedSingleDatabaseConnections
-        ),
-      ],
+    // const driver = $extensions.drivers.find(x => x.engine == data.engine);
+    // const config = getCurrentConfig();
+    // const handleRefresh = () => {
+    //   apiCall('server-connections/refresh', { conid: data._id });
+    // };
+    // const handleDisconnect = () => {
+    //   disconnectServerConnection(data._id);
+    // };
+    // const handleDelete = () => {
+    //   showModal(ConfirmModal, {
+    //     message: `Really delete connection ${getConnectionLabel(data)}?`,
+    //     onConfirm: () => apiCall('connections/delete', data),
+    //   });
+    // };
+    // const handleDuplicate = () => {
+    //   apiCall('connections/save', {
+    //     ...data,
+    //     _id: undefined,
+    //     displayName: `${getConnectionLabel(data)} - copy`,
+    //   });
+    // };
+    // const handleCreateDatabase = () => {
+    //   showModal(InputTextModal, {
+    //     header: 'Create database',
+    //     value: 'newdb',
+    //     label: 'Database name',
+    //     onConfirm: name =>
+    //       apiCall('server-connections/create-database', {
+    //         conid: data._id,
+    //         name,
+    //       }),
+    //   });
+    // };
+    // const handleServerSummary = () => {
+    //   openNewTab({
+    //     title: getConnectionLabel(data),
+    //     icon: 'img server',
+    //     tabComponent: 'ServerSummaryTab',
+    //     props: {
+    //       conid: data._id,
+    //     },
+    //   });
+    // };
+    // const handleNewQuery = () => {
+    //   const tooltip = `${getConnectionLabel(data)}`;
+    //   openNewTab({
+    //     title: 'Query #',
+    //     icon: 'img sql-file',
+    //     tooltip,
+    //     tabComponent: 'QueryTab',
+    //     props: {
+    //       conid: data._id,
+    //     },
+    //   });
+    // };
 
-      driver?.databaseEngineTypes?.includes('sql') && { onClick: handleSqlRestore, text: 'Restore/import SQL dump' },
-    ];
+    // return [
+    //   config.runAsPortal == false && [
+    //     {
+    //       text: $openedConnections.includes(data._id) ? 'View details' : 'Edit',
+    //       onClick: handleOpenConnectionTab,
+    //     },
+    //     !$openedConnections.includes(data._id) && {
+    //       text: 'Delete',
+    //       onClick: handleDelete,
+    //     },
+    //     {
+    //       text: 'Duplicate',
+    //       onClick: handleDuplicate,
+    //     },
+    //   ],
+    //   !data.singleDatabase && [
+    //     !$openedConnections.includes(data._id) && {
+    //       text: 'Connect',
+    //       onClick: handleConnect,
+    //     },
+    //     { onClick: handleNewQuery, text: 'New query', isNewQuery: true },
+    //     $openedConnections.includes(data._id) &&
+    //       data.status && {
+    //         text: 'Refresh',
+    //         onClick: handleRefresh,
+    //       },
+    //     $openedConnections.includes(data._id) && {
+    //       text: 'Disconnect',
+    //       onClick: handleDisconnect,
+    //     },
+    //     $openedConnections.includes(data._id) &&
+    //       driver?.supportedCreateDatabase &&
+    //       !data.isReadOnly && {
+    //         text: 'Create database',
+    //         onClick: handleCreateDatabase,
+    //       },
+    //     driver?.supportsServerSummary && {
+    //       text: 'Server summary',
+    //       onClick: handleServerSummary,
+    //     },
+    //   ],
+    //   data.singleDatabase && [
+    //     { divider: true },
+    //     getDatabaseMenuItems(
+    //       data,
+    //       data.defaultDatabase,
+    //       $currentDatabase,
+    //       $openedSingleDatabaseConnections
+    //     ),
+    //   ],
+
+    //   driver?.databaseEngineTypes?.includes('sql') && { onClick: handleSqlRestore, text: 'Restore/import SQL dump' },
+    // ];
   };
-
-  $: {
-    if ($extensions.drivers.find(x => x.engine == data.engine)) {
-      const match = (data.engine || '').match(/^([^@]*)@/);
-      extInfo = match ? match[1] : data.engine;
-      engineStatusIcon = null;
-      engineStatusTitle = null;
-    } else {
-      extInfo = data.engine;
-      engineStatusIcon = 'img warn';
-      engineStatusTitle = `Engine driver ${data.engine} not found, review installed plugins and change engine in edit connection dialog`;
-    }
-  }
 
   $: {
     const { _id, status } = data;
@@ -306,7 +293,6 @@
     }
   }
 
-  $: apps = useUsedApps();
 </script>
 
 <AppObjectCore

@@ -1,13 +1,12 @@
 <script lang="ts">
   import _, { map } from 'lodash';
-  import SvelteSelect from 'svelte-select';
+  // import SvelteSelect from 'svelte-select';
   import { createEventDispatcher } from 'svelte';
 
   const dispatch = createEventDispatcher();
 
   export let options = [];
   export let value;
-  export let isNative = false;
   export let isMulti = false;
   export let notSelected = null;
   export let defaultValue = '';
@@ -20,51 +19,24 @@
   }
 </script>
 
-{#if isNative}
-  <select
-    value={options.find(x => x.value == value) ? value : defaultValue}
-    {...$$restProps}
-    on:change={e => {
-      dispatch('change', e.target['value']);
-    }}
-  >
-    {#if notSelected}
-      <option value="">
-        {_.isString(notSelected) ? notSelected : '(not selected)'}
-      </option>
-    {/if}
-    {#each _.compact(options) as x (x.value)}
-      <option value={x.value}>
-        {x.label}
-      </option>
-    {/each}
-  </select>
-{:else}
-  <div class="select">
-    <SvelteSelect
-      {...$$restProps}
-      items={options}
-      value={isMulti
-        ? _.compact(value?.map(item => options.find(x => x.value == item)) ?? [])
-        : options.find(x => x.value == value) ?? null}
-      on:select={e => {
-        if (isMulti) {
-          dispatch(
-            'change',
-            e.detail?.map(x => x.value)
-          );
-        } else {
-          dispatch('change', e.detail.value);
-        }
-      }}
-      showIndicator={!isMulti}
-      isClearable={isMulti}
-      {isMulti}
-      bind:listOpen
-      bind:isFocused
-    />
-  </div>
-{/if}
+<select
+  value={options.find(x => x.value == value) ? value : defaultValue}
+  {...$$restProps}
+  on:change={e => {
+    dispatch('change', e.target['value']);
+  }}
+>
+  {#if notSelected}
+    <option value="">
+      {_.isString(notSelected) ? notSelected : '(not selected)'}
+    </option>
+  {/if}
+  {#each _.compact(options) as x (x.value)}
+    <option value={x.value}>
+      {x.label}
+    </option>
+  {/each}
+</select>
 
 <style>
   .select {

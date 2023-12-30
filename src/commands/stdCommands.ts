@@ -2,42 +2,42 @@ import {
   currentDatabase,
   currentTheme,
   emptyConnectionGroupNames,
-  extensions,
-  getExtensions,
+  // extensions,
+  // getExtensions,
   getVisibleToolbar,
   visibleToolbar,
   visibleWidgetSideBar,
 } from '../stores';
 import registerCommand from './registerCommand';
 import { get } from 'svelte/store';
-import AboutModal from '../modals/AboutModal.svelte';
-import SettingsModal from '../settings/SettingsModal.svelte';
-import ImportExportModal from '../modals/ImportExportModal.svelte';
-import SqlGeneratorModal from '../modals/SqlGeneratorModal.svelte';
-import { showModal } from '../modals/modalTools';
-import newQuery, { newDiagram, newPerspective, newQueryDesign } from '../query/newQuery';
-import saveTabFile from '../utility/saveTabFile';
+// import AboutModal from '../modals/AboutModal.svelte';
+// import SettingsModal from '../settings/SettingsModal.svelte';
+// import ImportExportModal from '../modals/ImportExportModal.svelte';
+// import SqlGeneratorModal from '../modals/SqlGeneratorModal.svelte';
+// import { showModal } from '../modals/modalTools';
+// import newQuery, { newDiagram, newPerspective, newQueryDesign } from '../query/newQuery';
+// import saveTabFile from '../utility/saveTabFile';
 import openNewTab from '../utility/openNewTab';
-import getElectron from '../utility/getElectron';
-import { openElectronFile } from '../utility/openElectronFile';
-import { getDefaultFileFormat } from '../plugins/fileformats';
-import { getCurrentConfig, getCurrentDatabase } from '../stores';
-import './recentDatabaseSwitch';
-import './changeDatabaseStatusCommand';
-import hasPermission from '../utility/hasPermission';
-import _ from 'lodash';
-import { findEngineDriver } from 'dbgate-tools';
-import { openArchiveFolder } from '../utility/openArchiveFolder';
-import InputTextModal from '../modals/InputTextModal.svelte';
-import { removeLocalStorage } from '../utility/storageCache';
-import { showSnackbarSuccess } from '../utility/snackbar';
-import { apiCall } from '../utility/api';
-import runCommand from './runCommand';
-import { openWebLink } from '../utility/exportFileTools';
-import { getSettings } from '../utility/metadataLoaders';
-import { isMac } from '../utility/common';
-import { doLogout, internalRedirectTo } from '../clientAuth';
-import { disconnectServerConnection } from '../appobj/ConnectionAppObject.svelte';
+// import getElectron from '../utility/getElectron';
+// import { openElectronFile } from '../utility/openElectronFile';
+// import { getDefaultFileFormat } from '../plugins/fileformats';
+// import { getCurrentConfig, getCurrentDatabase } from '../stores';
+// import './recentDatabaseSwitch';
+// import './changeDatabaseStatusCommand';
+// import hasPermission from '../utility/hasPermission';
+// import _ from 'lodash';
+// import { findEngineDriver } from 'dbgate-tools';
+// import { openArchiveFolder } from '../utility/openArchiveFolder';
+// import InputTextModal from '../modals/InputTextModal.svelte';
+// import { removeLocalStorage } from '../utility/storageCache';
+// import { showSnackbarSuccess } from '../utility/snackbar';
+// import { apiCall } from '../utility/api';
+// import runCommand from './runCommand';
+// import { openWebLink } from '../utility/exportFileTools';
+// import { getSettings } from '../utility/metadataLoaders';
+// import { isMac } from '../utility/common';
+// import { doLogout, internalRedirectTo } from '../clientAuth';
+// import { disconnectServerConnection } from '../appobj/ConnectionAppObject.svelte';
 
 // function themeCommand(theme: ThemeDefinition) {
 //   return {

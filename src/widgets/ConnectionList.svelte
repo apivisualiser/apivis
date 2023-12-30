@@ -17,7 +17,7 @@
     collapsedConnectionGroupNames,
   } from '../stores';
   import runCommand from '../commands/runCommand';
-  // import getConnectionLabel from '../utility/getConnectionLabel';
+  import getConnectionLabel from '../utility/getConnectionLabel';
   // import { useConnectionColorFactory } from '../utility/useConnectionColor';
   import FontIcon from '../icons/FontIcon.svelte';
   import CloseSearchButton from '../buttons/CloseSearchButton.svelte';

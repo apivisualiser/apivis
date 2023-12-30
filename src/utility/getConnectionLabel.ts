@@ -18,8 +18,8 @@ function getConnectionLabelCore(connection, { allowExplicitDatabase = true } = {
   if (connection.databaseFile) {
     return getDatabaseFileLabel(connection.databaseFile);
   }
-  if (connection.server) {
-    return connection.server;
+  if (connection.databaseUrl) {
+    return connection.databaseUrl;
   }
   if (connection.singleDatabase && connection.defaultDatabase) {
     return `${connection.defaultDatabase}`;
