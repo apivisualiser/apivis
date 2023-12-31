@@ -1,5 +1,18 @@
 <script lang="ts" context="module">
   export const matchingProps = ['conid', 'path', 'method'];
+
+  const getCurrentEditor = () => getActiveComponent('ApiEndpointTab');
+
+  registerCommand({
+    id: 'endpoint.send',
+    category: 'Endpoint',
+    icon: 'icon send',
+    name: 'Send',
+    toolbar: true,
+    isRelatedToTab: true,
+    testEnabled: () => getCurrentEditor() != null,
+    onClick: () => getCurrentEditor().send(),
+  });
 </script>
 
 <script lang="ts">
@@ -16,11 +29,17 @@
   import DataGrid from '../datagrid/DataGrid.svelte';
   import _ from 'lodash';
   import useEditorData from '../utility/useEditorData';
+  import ToolStripContainer from '../buttons/ToolStripContainer.svelte';
+  import ToolStripCommandButton from '../buttons/ToolStripCommandButton.svelte';
+  import createActivator, { getActiveComponent } from '../utility/createActivator';
+  import registerCommand from '../commands/registerCommand';
 
   export let tabid;
   export let path: string;
   export let conid: string;
   export let method: string;
+
+  export const activator = createActivator('ApiEndpointTab', true);
 
   let json;
   $: allArrays = extractAllArrays(json);
@@ -41,7 +60,7 @@
     setEditorData(value);
   });
 
-  async function handleSend() {
+  export async function send() {
     const connection = await getConnection(conid);
     const params = new URLSearchParams();
 
@@ -86,50 +105,48 @@
   }
 </script>
 
-<FormProviderCore template={FormFieldTemplateLarge} {values}>
-  <div class="flex-container">
-    <div>
+<ToolStripContainer>
+  <FormProviderCore template={FormFieldTemplateLarge} {values}>
+    <div class="flex-container">
       <div>
-        {#each filterParameterObjects($apiInfo?.paths[path]?.[method]?.parameters ?? []) as param}
-          <FormTextField name={param.name} label={param.name} required={param.required} />
-        {/each}
+        <div>
+          {#each filterParameterObjects($apiInfo?.paths[path]?.[method]?.parameters ?? []) as param}
+            <FormTextField name={param.name} label={param.name} required={param.required} />
+          {/each}
+        </div>
       </div>
 
-      <div class="buttons">
-        <FormButton value="Send" on:click={handleSend} />
-      </div>
+      {#if json}
+        <TabControl
+          tabs={[
+            { label: 'JSON', slot: 1 },
+            ..._.keys(allArrays).map(key => ({ label: key, slot: 2, props: { rows: allArrays[key] } })),
+          ]}
+        >
+          <svelte:fragment slot="1">
+            {#if json}
+              <div class="json-container">
+                <JSONTree value={json} expanded />
+              </div>
+            {/if}
+          </svelte:fragment>
+
+          <svelte:fragment slot="2" let:rows>
+            {#if json}
+              <DataGrid {rows} />
+            {/if}
+          </svelte:fragment>
+        </TabControl>
+      {/if}
     </div>
+  </FormProviderCore>
 
-    <TabControl
-      tabs={[
-        { label: 'JSON', slot: 1 },
-        ..._.keys(allArrays).map(key => ({ label: key, slot: 2, props: { rows: allArrays[key] } })),
-        // { label: 'Data grid', slot: 2 },
-      ]}
-    >
-      <svelte:fragment slot="1">
-        {#if json}
-          <div class="json-container">
-            <JSONTree value={json} expanded />
-          </div>
-        {/if}
-      </svelte:fragment>
-
-      <svelte:fragment slot="2" let:rows>
-        {#if json}
-          <DataGrid {rows} />
-        {/if}
-      </svelte:fragment>
-    </TabControl>
-  </div>
-</FormProviderCore>
+  <svelte:fragment slot="toolstrip">
+    <ToolStripCommandButton command="endpoint.send" />
+  </svelte:fragment>
+</ToolStripContainer>
 
 <style>
-  .buttons {
-    flex-shrink: 0;
-    margin: var(--dim-large-form-margin);
-  }
-
   .json-container {
     overflow: scroll;
   }
