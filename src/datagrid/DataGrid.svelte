@@ -2,24 +2,25 @@
   import _ from 'lodash';
   import DataGridCell from './DataGridCell.svelte';
 
-  export let data: any;
+  export let rows: any;
 
-  function extractTopmostRows(data) {
-    if (_.isArray(data)) {
-      return data;
-    }
-    if (_.isPlainObject(data)) {
-      for (const key in data) {
-        if (_.isArray(data[key])) {
-          return data[key];
-        }
-      }
-    }
-    return [];
-  }
 
-  $: topmostRows = extractTopmostRows(data);
-  $: columns = _.uniq(_.flatMap(topmostRows, Object.keys));
+  // function extractTopmostRows(data) {
+  //   if (_.isArray(data)) {
+  //     return data;
+  //   }
+  //   if (_.isPlainObject(data)) {
+  //     for (const key in data) {
+  //       if (_.isArray(data[key])) {
+  //         return data[key];
+  //       }
+  //     }
+  //   }
+  //   return [];
+  // }
+
+  // $: topmostRows = extractTopmostRows(data);
+  $: columns = _.uniq(_.flatMap(rows, Object.keys));
 </script>
 
 <div class="wrapper">
@@ -33,7 +34,7 @@
       </tr>
     </thead>
     <tbody>
-      {#each topmostRows as row, index}
+      {#each rows as row, index}
         <tr>
           <td>{index + 1}</td>
           {#each columns as key}

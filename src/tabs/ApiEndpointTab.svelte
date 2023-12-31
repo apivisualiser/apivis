@@ -14,12 +14,14 @@
   import JSONTree from '../jsontree/JSONTree.svelte';
   import TabControl from '../elements/TabControl.svelte';
   import DataGrid from '../datagrid/DataGrid.svelte';
+  import _ from 'lodash';
 
   export let path: string;
   export let conid: string;
   export let method: string;
 
   let json;
+  $: allArrays = extractAllArrays(json);
 
   const values = writable<Record<string, string>>({});
 
@@ -55,6 +57,20 @@
     const resp = await fetch(url.toString());
     json = await resp.json();
   }
+
+  function extractAllArrays(data, parentKey?): Record<string, any[]> {
+    if (_.isArray(data)) {
+      return { [parentKey ?? 'Rows']: data };
+    }
+    if (_.isPlainObject(data)) {
+      let result: Record<string, any[]> = {};
+      for (const key in data) {
+        result = { ...result, ...extractAllArrays(data[key], key) };
+      }
+      return result;
+    }
+    return {};
+  }
 </script>
 
 <FormProviderCore template={FormFieldTemplateLarge} {values}>
@@ -74,7 +90,8 @@
     <TabControl
       tabs={[
         { label: 'JSON', slot: 1 },
-        { label: 'Data grid', slot: 2 },
+        ..._.keys(allArrays).map(key => ({ label: key, slot: 2, props: { rows: allArrays[key] } })),
+        // { label: 'Data grid', slot: 2 },
       ]}
     >
       <svelte:fragment slot="1">
@@ -85,9 +102,9 @@
         {/if}
       </svelte:fragment>
 
-      <svelte:fragment slot="2">
+      <svelte:fragment slot="2" let:rows>
         {#if json}
-          <DataGrid data={json} />
+          <DataGrid {rows} />
         {/if}
       </svelte:fragment>
     </TabControl>
