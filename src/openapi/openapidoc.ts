@@ -37,9 +37,14 @@ export class ApiDocProvider {
       for (const method in methods) {
         const endpoint = new ApiDocEndpoint(this.apiDoc, path, method);
         this.endPoints.push(endpoint);
-        for (const tag of endpoint.tags) {
-          const tagObj = this.getTag(tag);
+        if (endpoint.tags.length === 0) {
+          const tagObj = this.getTag('default');
           tagObj.endPoints.push(endpoint);
+        } else {
+          for (const tag of endpoint.tags) {
+            const tagObj = this.getTag(tag);
+            tagObj.endPoints.push(endpoint);
+          }
         }
       }
     }
@@ -61,10 +66,15 @@ export async function loadOpenApiDocument(url: string): Promise<OpenAPIObject> {
   if (cached) {
     return cached;
   }
-  const resp = await fetch(url);
-  const json = await resp.json();
-  apiDocCache.set(url, json);
-  return json;
+  try {
+    const resp = await fetch(url);
+    const json = await resp.json();
+    apiDocCache.set(url, json);
+    return json;
+  } catch (e) {
+    console.error(e);
+    throw new Error(`Failed to load OpenAPI document from ${url}`);
+  }
 
   // return fetch(url)
   //   .then(response => response.json())
@@ -81,6 +91,11 @@ export function useCurrentApiInfo(): Readable<OpenAPIObject> {
       });
     },
   };
+}
+
+export async function getApiInfo(conid: string): Promise<OpenAPIObject> {
+  const connection = await getConnection(conid);
+  return loadOpenApiDocument(connection!.openApiUrl);
 }
 
 export function useApiInfo(conid: string): Readable<OpenAPIObject> {

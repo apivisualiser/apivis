@@ -83,3 +83,17 @@ export function isCtrlOrCommandKey(event) {
 }
 
 export const notypecheck: any = {};
+
+export function extractAllArrays(data, parentKey?): Record<string, any[]> {
+  if (_.isArray(data)) {
+    return { [parentKey ?? 'Rows']: data };
+  }
+  if (_.isPlainObject(data)) {
+    let result: Record<string, any[]> = {};
+    for (const key in data) {
+      result = { ...result, ...extractAllArrays(data[key], key) };
+    }
+    return result;
+  }
+  return {};
+}

@@ -33,16 +33,22 @@
   import ToolStripCommandButton from '../buttons/ToolStripCommandButton.svelte';
   import createActivator, { getActiveComponent } from '../utility/createActivator';
   import registerCommand from '../commands/registerCommand';
+  import { extractAllArrays } from '../utility/common';
+  import { sendApiRequest, type ApiRequestResponse } from '../openapi/sendApiRequest';
+  import FontIcon from '../icons/FontIcon.svelte';
+  import LoadingInfo from '../elements/LoadingInfo.svelte';
 
   export let tabid;
   export let path: string;
   export let conid: string;
   export let method: string;
 
+  let isSending = false;
+
   export const activator = createActivator('ApiEndpointTab', true);
 
-  let json;
-  $: allArrays = extractAllArrays(json);
+  let resp: ApiRequestResponse | null = null;
+  $: allArrays = extractAllArrays(resp?.json);
 
   const values = writable<Record<string, string>>({});
 
@@ -61,47 +67,10 @@
   });
 
   export async function send() {
-    const connection = await getConnection(conid);
-    const params = new URLSearchParams();
-
-    let pathReplaced = path;
-
-    for (const param of endpoint?.parameters ?? []) {
-      if (isParameterObject(param)) {
-        if (param.in === 'query' && $values[param.name]) {
-          params.append(param.name, $values[param.name]);
-        }
-        if (param.in === 'path') {
-          pathReplaced = pathReplaced.replace(`{${param.name}}`, $values[param.name]);
-        }
-      }
-    }
-
-    let url: URL;
-    if (path.includes('://')) {
-      url = new URL(pathReplaced);
-    } else {
-      url = new URL(connection?.openApiUrl!);
-      url.pathname = pathReplaced;
-    }
-
-    url.search = params.toString();
-    const resp = await fetch(url.toString());
-    json = await resp.json();
-  }
-
-  function extractAllArrays(data, parentKey?): Record<string, any[]> {
-    if (_.isArray(data)) {
-      return { [parentKey ?? 'Rows']: data };
-    }
-    if (_.isPlainObject(data)) {
-      let result: Record<string, any[]> = {};
-      for (const key in data) {
-        result = { ...result, ...extractAllArrays(data[key], key) };
-      }
-      return result;
-    }
-    return {};
+    resp = null;
+    isSending = true;
+    resp = await sendApiRequest(conid, path, $values, method);
+    isSending = false;
   }
 </script>
 
@@ -116,27 +85,59 @@
         </div>
       </div>
 
-      {#if json}
+      {#if resp}
         <TabControl
           tabs={[
-            { label: 'JSON', slot: 1 },
-            ..._.keys(allArrays).map(key => ({ label: key, slot: 2, props: { rows: allArrays[key] } })),
+            ..._.keys(allArrays).map(key => ({
+              label: `${key} (${allArrays[key].length})`,
+              slot: 2,
+              props: { rows: allArrays[key] },
+            })),
+            resp?.json && { label: 'JSON', slot: 1 },
+            resp?.html && { label: 'HTML', slot: 3 },
+            resp?.text && { label: 'Text', slot: 4 },
+            resp?.error && { label: 'Error', slot: 5 },
           ]}
         >
           <svelte:fragment slot="1">
-            {#if json}
-              <div class="json-container">
-                <JSONTree value={json} expanded />
-              </div>
-            {/if}
+            <div class="scroll-container">
+              <JSONTree value={resp?.json} expanded />
+            </div>
           </svelte:fragment>
 
           <svelte:fragment slot="2" let:rows>
-            {#if json}
-              <DataGrid {rows} />
-            {/if}
+            <DataGrid {rows} />
+          </svelte:fragment>
+
+          <svelte:fragment slot="3">
+            <div class="scroll-container">
+              {@html resp?.html}
+            </div>
+          </svelte:fragment>
+
+          <svelte:fragment slot="4">
+            <div class="scroll-container">
+              <pre>
+{resp?.text}
+</pre>
+            </div>
+          </svelte:fragment>
+
+          <svelte:fragment slot="5">
+            <div class="scroll-container">
+              <pre>
+{resp?.error}
+</pre>
+            </div>
           </svelte:fragment>
         </TabControl>
+      {:else if isSending}
+        <LoadingInfo message="Sending request..." />
+      {:else}
+        <div class="m-4 flex info-container">
+          <span class="info-icon mr-2"><FontIcon icon="img info" /></span> Please use "Send" button for sending request to
+          API
+        </div>
       {/if}
     </div>
   </FormProviderCore>
@@ -147,7 +148,7 @@
 </ToolStripContainer>
 
 <style>
-  .json-container {
+  .scroll-container {
     overflow: scroll;
   }
 
@@ -155,5 +156,13 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+  }
+
+  .info-icon {
+    font-size: 34px;
+  }
+
+  .info-container {
+    align-items: center;
   }
 </style>
