@@ -2,10 +2,11 @@
   import ConfirmModal from '../modals/ConfirmModal.svelte';
   import { showModal } from '../modals/modalTools';
   import getConnectionLabel from '../utility/getConnectionLabel';
-  import { saveConnection, type ConnectionInfo, deleteConnection } from '../utility/localdb';
+  import { saveConnection, deleteConnection } from '../utility/localdb';
   import AppObjectCore from './AppObjectCore.svelte';
   import { v1 as uuidv1 } from 'uuid';
   import { currentConnection } from '../stores';
+  import type { ConnectionInfo } from '../utility/types';
 
   export let data: ConnectionInfo;
 

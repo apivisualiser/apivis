@@ -1,20 +1,17 @@
 import Dexie, { type Table } from "dexie";
 import { liveQuery } from "dexie";
-
-export interface ConnectionInfo {
-  id: string;
-  openApiUrl: string;
-  displayName?: string;
-}
+import type { ConnectionInfo, TabDefinition } from "./types";
 
 class ApiManDb extends Dexie {
   public connections!: Table<ConnectionInfo, string>;
+  // public tabs!: Table<TabDefinition, string>;
 
   public constructor() {
     super("apiman");
 
     this.version(1).stores({
       connections: "id",
+      // tabs: "tabid",
     });
   }
 }
@@ -40,3 +37,7 @@ export async function saveConnection(conn: ConnectionInfo) {
 export async function deleteConnection(conid: string) {
   await localDb.connections.delete(conid);
 }
+
+// export function useTabs() {
+//   return liveQuery(() => localDb.tabs.toArray());
+// }

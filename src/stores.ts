@@ -4,21 +4,7 @@ import invalidateCommands from './commands/invalidateCommands';
 import _ from 'lodash';
 import { safeJsonParse } from './utility/stringTools';
 import { getThemes } from './themes/themes';
-import type { ConnectionInfo } from './utility/localdb';
-
-export interface TabDefinition {
-  title: string;
-  closedTime?: number;
-  icon: string;
-  props: any;
-  selected: boolean;
-  busy: boolean;
-  tabid: string;
-  tabComponent: string;
-  tabOrder?: number;
-  multiTabIndex?: number;
-  unsaved?: boolean;
-}
+import type { ConnectionInfo, TabDefinition } from './utility/types';
 
 export function writableWithStorage<T>(defaultValue: T, storageName) {
   const init = localStorage.getItem(storageName);

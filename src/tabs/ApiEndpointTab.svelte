@@ -15,7 +15,9 @@
   import TabControl from '../elements/TabControl.svelte';
   import DataGrid from '../datagrid/DataGrid.svelte';
   import _ from 'lodash';
+  import useEditorData from '../utility/useEditorData';
 
+  export let tabid;
   export let path: string;
   export let conid: string;
   export let method: string;
@@ -28,6 +30,17 @@
   const apiInfo = useApiInfo(conid);
   $: endpoint = $apiInfo?.paths?.[path]?.[method];
 
+  const { setEditorData } = useEditorData({
+    tabid,
+    onInitialData: value => {
+      $values = value;
+    },
+  });
+
+  values.subscribe(value => {
+    setEditorData(value);
+  });
+
   async function handleSend() {
     const connection = await getConnection(conid);
     const params = new URLSearchParams();
@@ -36,7 +49,7 @@
 
     for (const param of endpoint?.parameters ?? []) {
       if (isParameterObject(param)) {
-        if (param.in === 'query' && $values[param.name] != null) {
+        if (param.in === 'query' && $values[param.name]) {
           params.append(param.name, $values[param.name]);
         }
         if (param.in === 'path') {
