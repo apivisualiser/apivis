@@ -24,3 +24,10 @@ export default function getConnectionLabel(connection, { allowExplicitDatabase =
 
   return '';
 }
+
+export function getEndpointLabel(path: string) {
+  if (!path) return path;
+  const m = path.match(/\/([^\/\{\}]+)\/?$|\/([^\/]+\/\{[^\/]+\})\/?$/);
+  if (m) return m[1] || m[2];
+  return path;
+}

@@ -104,7 +104,7 @@
   {#if colorMark}
     <FontIcon style={`color:${colorMark}`} icon="icon square" />
   {/if}
-  {title}
+  <span title={title}>{title}</span>
   {#if statusIconBefore}
     <span class="status">
       <FontIcon icon={statusIconBefore} />

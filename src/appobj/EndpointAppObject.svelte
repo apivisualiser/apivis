@@ -3,7 +3,7 @@
   import AppObjectCore from './AppObjectCore.svelte';
   import openNewTab from '../utility/openNewTab';
   import type { ApiDocEndpoint } from '../openapi/openapidoc';
-  import getConnectionLabel from '../utility/getConnectionLabel';
+  import getConnectionLabel, { getEndpointLabel } from '../utility/getConnectionLabel';
   import { getConnection } from '../utility/localdb';
 
   export let endpoint: ApiDocEndpoint;
@@ -13,7 +13,7 @@
   async function handleClick() {
     const connection = await getConnection(conid);
     openNewTab({
-      title: endpoint.path,
+      title: getEndpointLabel(endpoint.path),
       icon: 'mtd ' + endpoint.method,
       tabComponent: 'ApiEndpointTab',
       props: {
@@ -25,4 +25,4 @@
   }
 </script>
 
-<AppObjectCore title={endpoint.path} on:click={handleClick} icon={'mtd ' + endpoint.method} />
+<AppObjectCore title={endpoint.path} on:click={handleClick} icon={'mtd ' + endpoint.method}  />
