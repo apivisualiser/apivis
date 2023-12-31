@@ -1,10 +1,12 @@
 <script lang="ts">
   import _ from 'lodash';
+  import getConnectionLabel from '../utility/getConnectionLabel';
+  import { currentConnection } from '../stores';
   // import moment from 'moment';
   // import { showModal } from '../modals/modalTools';
   // import ChooseConnectionColorModal from '../modals/ChooseConnectionColorModal.svelte';
 
-  // import FontIcon from '../icons/FontIcon.svelte';
+  import FontIcon from '../icons/FontIcon.svelte';
 
   // import {
   //   activeTabId,
@@ -28,7 +30,8 @@
   // $: serverVersion = useDatabaseServerVersion(dbid || {});
 
   // $: contextItems = $statusBarTabInfo[$activeTabId] as any[];
-  // $: connectionLabel = getConnectionLabel(connection, { allowExplicitDatabase: false });
+  $: connection = $currentConnection;
+  $: connectionLabel = getConnectionLabel(connection, { allowExplicitDatabase: false });
 
   // $: connectionBackground = useConnectionColor(dbid, 3, 'dark', true);
   // $: connectionButtonBackground = useConnectionColor(dbid ? { conid: dbid.conid } : null, 6, 'dark', true);
@@ -47,9 +50,20 @@
   // }
 </script>
 
-<div class="main" >
+<div class="main">
   <div class="container">
-    TEST</div>
+    {#if connection}
+      <div class="item">
+        <FontIcon icon="icon server" padRight />
+        {connectionLabel}
+      </div>
+    {/if}
+    {#if !connection}
+      <div class="item">
+        <FontIcon icon="icon disconnected" padRight /> Not connected
+      </div>
+    {/if}
+  </div>
 
   <!-- <div class="container">
     {#if databaseName}

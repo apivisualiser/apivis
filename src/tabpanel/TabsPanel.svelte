@@ -158,7 +158,10 @@
 
   function getTabDbName(tab, connectionList) {
     if (tab.tabComponent == 'ConnectionTab') return 'Connections';
-    if (tab.props?.connectionLabel) return tab.props?.connectionLabel;
+    const connection = connectionList?.find(x => x.id == tab.props?.conid);
+    if (connection) {
+      return getConnectionLabel(connection);
+    }
     if (tab.props?.conid) {
       return '???';
     }
@@ -255,7 +258,7 @@
 </script>
 
 <script lang="ts">
-  import _ from 'lodash';
+  import _, { get } from 'lodash';
   import { tick } from 'svelte';
   import registerCommand from '../commands/registerCommand';
   import FontIcon from '../icons/FontIcon.svelte';
@@ -289,6 +292,7 @@
   // import { useConnectionColorFactory } from '../utility/useConnectionColor';
   import TabCloseButton from '../elements/TabCloseButton.svelte';
   import { useConnectionList } from '../utility/localdb';
+  import getConnectionLabel from '../utility/getConnectionLabel';
   // import CloseTabModal from '../modals/CloseTabModal.svelte';
 
   export let multiTabIndex;

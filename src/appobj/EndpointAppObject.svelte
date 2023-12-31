@@ -20,7 +20,6 @@
         path: endpoint.path,
         method: endpoint.method,
         conid,
-        connectionLabel: getConnectionLabel(connection),
       },
     });
   }

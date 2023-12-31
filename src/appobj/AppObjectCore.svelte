@@ -61,8 +61,6 @@
       checkedObjectsStore.update(x => [...x, data]);
     }
   }
-
-  $: console.log(title, indentLevel);
 </script>
 
 <div
