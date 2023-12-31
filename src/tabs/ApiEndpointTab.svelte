@@ -37,6 +37,8 @@
   import { sendApiRequest, type ApiRequestResponse } from '../openapi/sendApiRequest';
   import FontIcon from '../icons/FontIcon.svelte';
   import LoadingInfo from '../elements/LoadingInfo.svelte';
+  import TextAreaField from '../forms/TextAreaField.svelte';
+  import AceEditor from '../elements/AceEditor.svelte';
 
   export let tabid;
   export let path: string;
@@ -72,17 +74,28 @@
     resp = await sendApiRequest(conid, path, $values, method);
     isSending = false;
   }
+
+  $: console.log($apiInfo?.paths[path]?.[method]?.requestBody);
 </script>
 
 <ToolStripContainer>
   <FormProviderCore template={FormFieldTemplateLarge} {values}>
     <div class="flex-container">
       <div>
-        <div>
-          {#each filterParameterObjects($apiInfo?.paths[path]?.[method]?.parameters ?? []) as param}
-            <FormTextField name={param.name} label={param.name} required={param.required} />
-          {/each}
-        </div>
+        {#each filterParameterObjects($apiInfo?.paths[path]?.[method]?.parameters ?? []) as param}
+          <FormTextField name={param.name} label={param.name} required={param.required} />
+        {/each}
+        {#if $apiInfo?.paths[path]?.[method]?.requestBody}
+          <div class="editor">
+            <AceEditor
+              mode="json"
+              value={$values.$requestBody}
+              on:input={(e) => {
+                values.update(x => ({ ...x, $requestBody: e.detail }));
+              }}
+            />
+          </div>
+        {/if}
       </div>
 
       {#if resp}
@@ -164,5 +177,11 @@
 
   .info-container {
     align-items: center;
+  }
+
+  .editor {
+    height: 30vh;
+    display: flex;
+    position: relative;
   }
 </style>

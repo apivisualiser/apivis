@@ -2,6 +2,7 @@ import { type OpenAPIObject, OpenApiBuilder, type ReferenceObject, type Paramete
 import { currentConnection } from '../stores';
 import type { Readable } from 'svelte/store';
 import { getConnection } from '../utility/localdb';
+import SwaggerClient from 'swagger-client';
 
 const apiDocCache = new Map<string, OpenAPIObject>();
 
@@ -69,8 +70,9 @@ export async function loadOpenApiDocument(url: string): Promise<OpenAPIObject> {
   try {
     const resp = await fetch(url);
     const json = await resp.json();
-    apiDocCache.set(url, json);
-    return json;
+    const resolved = (await SwaggerClient.resolve({ spec: json })).spec;
+    apiDocCache.set(url, resolved);
+    return resolved;
   } catch (e) {
     console.error(e);
     throw new Error(`Failed to load OpenAPI document from ${url}`);
