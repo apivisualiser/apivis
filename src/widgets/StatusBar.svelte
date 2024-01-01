@@ -1,12 +1,14 @@
 <script lang="ts">
   import _ from 'lodash';
   import getConnectionLabel from '../utility/getConnectionLabel';
-  import { currentConnection } from '../stores';
+  import { currentConnection, currentOpenedConnection } from '../stores';
+  import { format, formatDistance } from 'date-fns';
   // import moment from 'moment';
   // import { showModal } from '../modals/modalTools';
   // import ChooseConnectionColorModal from '../modals/ChooseConnectionColorModal.svelte';
 
   import FontIcon from '../icons/FontIcon.svelte';
+  import { triggerConnectionLoad } from '../openapi/openapidoc';
 
   // import {
   //   activeTabId,
@@ -62,6 +64,37 @@
       <div class="item">
         <FontIcon icon="icon disconnected" padRight /> Not connected
       </div>
+    {/if}
+
+    {#if $currentOpenedConnection}
+      {#if $currentOpenedConnection.status == 'error'}
+        <div class="item">
+          <FontIcon icon="img error-inv" padRight /> Error
+        </div>
+      {:else if $currentOpenedConnection.status == 'pending'}
+        <div class="item">
+          <FontIcon icon="icon loading" padRight /> Loading
+        </div>
+      {:else if $currentOpenedConnection.status == 'connected'}
+        <div class="item">
+          <FontIcon icon="img ok-inv" padRight /> Connected
+        </div>
+      {/if}
+
+      {#if $currentOpenedConnection.apidocLoaded}
+        <div
+          class="item flex clickable"
+          title={`Last ${getConnectionLabel($currentOpenedConnection.connection)} model refresh: ${format(
+            $currentOpenedConnection.apidocLoaded,
+            'HH:mm:ss'
+          )}\nClick for refresh API model`}
+          on:click={() => triggerConnectionLoad($currentOpenedConnection?.connection?.id)}
+        >
+          <FontIcon icon="icon history" padRight />
+          {formatDistance($currentOpenedConnection.apidocLoaded, new Date(), { addSuffix: true }) +
+            (timerValue ? '' : '')}
+        </div>
+      {/if}
     {/if}
   </div>
 

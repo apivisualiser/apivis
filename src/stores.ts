@@ -103,6 +103,11 @@ export const currentThemeDefinition = derived([currentTheme], ([$currentTheme]) 
   getThemes().find(x => x.themeClassName == $currentTheme)
 );
 
+export const currentOpenedConnection = derived(
+  [currentConnection, openedConnections],
+  ([$currentConnection, $openedConnections]) => ($currentConnection ? $openedConnections[$currentConnection.id] : null)
+);
+
 export const visibleTitleBar = writable(false);
 
 // let nativeMenuOnStartup = null;

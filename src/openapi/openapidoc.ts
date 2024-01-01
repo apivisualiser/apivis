@@ -32,7 +32,10 @@ function updateConnectionFields(conid: string, fields: Partial<OpenedConnection>
 
 const loadingConnections = new Set<string>();
 
-export async function triggerConnectionLoad(conid: string) {
+export async function triggerConnectionLoad(conid?: string) {
+  if (!conid) {
+    return;
+  }
   if (loadingConnections.has(conid)) {
     return;
   }
@@ -70,7 +73,7 @@ export function useApiInfo(conid: string): Readable<OpenAPIObject | undefined> {
     ([$openedConnections, connectionList]) => {
       const openedConnection = $openedConnections[conid];
       if (!openedConnection) {
-        const connection = connectionList.find(c => c.id === conid);
+        const connection = connectionList?.find(c => c.id === conid);
         if (connection) {
           openAndLoadConnection(conid, connection);
         }
@@ -93,7 +96,7 @@ export function useApiInfo(conid: string): Readable<OpenAPIObject | undefined> {
   // };
 }
 
-function openAndLoadConnection(conid: string, connection: ConnectionInfo) {
+export function openAndLoadConnection(conid: string, connection: ConnectionInfo) {
   openedConnections.update(connections => {
     setTimeout(() => {
       triggerConnectionLoad(conid);

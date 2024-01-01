@@ -13,9 +13,9 @@
 
   export let isBold = false;
   export let isBusy = false;
-  export let statusIcon = undefined;
+  export let statusIcon: string | undefined = undefined;
   export let statusIconBefore = undefined;
-  export let statusTitle = undefined;
+  export let statusTitle: string | undefined = undefined;
   export let extInfo = undefined;
   export let menu: any = undefined;
   export let expandIcon = undefined;
@@ -104,7 +104,7 @@
   {#if colorMark}
     <FontIcon style={`color:${colorMark}`} icon="icon square" />
   {/if}
-  <span title={title}>{title}</span>
+  <span {title}>{title}</span>
   {#if statusIconBefore}
     <span class="status">
       <FontIcon icon={statusIconBefore} />

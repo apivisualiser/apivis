@@ -25,6 +25,7 @@
     "@mdi/font": "^7.3.67",
     "@types/lodash": "^4.14.202",
     "ace-builds": "^1.32.3",
+    "date-fns": "^3.0.6",
     "dexie": "^4.0.1-beta.6",
     "electron": "^28.1.0",
     "fuzzy": "^0.1.3",

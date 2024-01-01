@@ -6,9 +6,10 @@
   import AppObjectCore from './AppObjectCore.svelte';
   import { v1 as uuidv1 } from 'uuid';
   import { currentConnection } from '../stores';
-  import type { ConnectionInfo } from '../utility/types';
+  import type { ConnectionInfo, OpenedConnection } from '../utility/types';
 
   export let data: ConnectionInfo;
+  export let opened: OpenedConnection | undefined;
 
   const handleDelete = () => {
     showModal(ConfirmModal, {
@@ -42,6 +43,14 @@
   title={getConnectionLabel(data)}
   icon="img server"
   menu={getContextMenu}
-  on:click={() => (currentConnection.set(data))}
+  on:click={() => currentConnection.set(data)}
   isBold={$currentConnection?.id == data.id}
+  statusIcon={opened?.status == 'error'
+    ? 'img error'
+    : opened?.status == 'pending'
+      ? 'icon loading'
+      : opened?.status == 'connected'
+        ? 'img ok'
+        : undefined}
+  statusTitle={opened?.errorMessage}
 />

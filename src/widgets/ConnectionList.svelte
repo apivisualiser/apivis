@@ -133,7 +133,7 @@
   }}
 >
   {#each ($connections || []).filter(conn => filterName(filter, conn.displayName, conn.openApiUrl)) as connectionItem}
-    <ConnectionAppObject data={connectionItem} />
+    <ConnectionAppObject data={connectionItem} opened={$openedConnections[connectionItem.id]} />
   {/each}
   {#if $connections && !$connections.find(x => !x.unsaved) && $openedConnections.length == 0 && $commandsCustomized['new.connection']?.enabled && !$openedTabs.find(x => !x.closedTime && x.tabComponent == 'ConnectionTab' && !x.props?.conid)}
     <LargeButton icon="icon new-connection" on:click={() => runCommand('new.connection')} fillHorizontal

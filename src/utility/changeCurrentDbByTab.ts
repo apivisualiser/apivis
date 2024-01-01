@@ -1,8 +1,9 @@
 import _ from 'lodash';
-import { currentConnection, getCurrentConnection, getLockedDatabaseMode, openedTabs } from '../stores';
+import { currentConnection, getCurrentConnection, getLockedDatabaseMode, getOpenedConnections, openedTabs } from '../stores';
 import { shouldShowTab } from '../tabpanel/TabsPanel.svelte';
 import { callWhenAppLoaded, getAppLoaded } from './appLoadManager';
 import { getConnection } from './localdb';
+import { openAndLoadConnection } from '../openapi/openapidoc';
 // import { getConnectionInfo } from './metadataLoaders';
 
 let lastCurrentTab: any = null;
@@ -22,6 +23,9 @@ openedTabs.subscribe(value => {
       const doWork = async () => {
         const connection = await getConnection(conid);
         currentConnection.set(connection!);
+        if (!getOpenedConnections()[conid]) {
+          openAndLoadConnection(conid, connection!);
+        }
       };
       callWhenAppLoaded(doWork);
     }
