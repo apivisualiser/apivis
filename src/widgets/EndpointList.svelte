@@ -1,6 +1,6 @@
 <script lang="ts">
   import _ from 'lodash';
-  import { useCurrentApiInfo } from '../openapi/openapidoc';
+  import { triggerConnectionLoad, useCurrentApiInfo } from '../openapi/openapidoc';
   import WidgetsInnerContainer from './WidgetsInnerContainer.svelte';
   import EndpointAppObject from '../appobj/EndpointAppObject.svelte';
   import { currentConnection } from '../stores';
@@ -18,7 +18,9 @@
   // $: paths = $apiInfo?.paths || {};
   $: provider = new ApiDocProvider($apiInfo).filter(filter);
 
-  function handleRefreshConnection() {}
+  function handleRefreshConnection() {
+    triggerConnectionLoad($currentConnection?.id!);
+  }
 </script>
 
 <SearchBoxWrapper>
@@ -30,11 +32,13 @@
 </SearchBoxWrapper>
 
 <WidgetsInnerContainer>
-  {#each provider.tags as tag}
-    <AppObjectGroup title={tag.name}>
-      {#each tag.endPoints as endpoint}
-        <EndpointAppObject {endpoint} apiInfo={$apiInfo} conid={$currentConnection?.id} />
-      {/each}
-    </AppObjectGroup>
-  {/each}
+  {#if $apiInfo}
+    {#each provider.tags as tag}
+      <AppObjectGroup title={tag.name}>
+        {#each tag.endPoints as endpoint}
+          <EndpointAppObject {endpoint} apiInfo={$apiInfo} conid={$currentConnection?.id} />
+        {/each}
+      </AppObjectGroup>
+    {/each}
+  {/if}
 </WidgetsInnerContainer>

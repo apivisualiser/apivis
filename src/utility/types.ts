@@ -1,4 +1,4 @@
-import type { OpenAPIObject } from "openapi3-ts/oas30";
+import type { OpenAPIObject } from 'openapi3-ts/oas30';
 
 export interface ConnectionInfo {
   id: string;
@@ -22,6 +22,8 @@ export interface TabDefinition {
 
 export interface OpenedConnection {
   connection: ConnectionInfo;
-  apidoc: OpenAPIObject;
-  apidocLoaded: Date;
+  apidoc?: OpenAPIObject;
+  apidocLoaded?: Date;
+  status: 'connected' | 'pending' | 'error';
+  errorMessage?: string;
 }

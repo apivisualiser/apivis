@@ -31,6 +31,7 @@
   import AppObjectCore from '../appobj/AppObjectCore.svelte';
   import ConnectionAppObject from '../appobj/ConnectionAppObject.svelte';
   import { filterName } from '../utility/filterName';
+  import { triggerAllConnectionsLoad } from '../openapi/openapidoc';
 
   const connections = useConnectionList();
   // const serverStatus = useServerStatus();
@@ -54,9 +55,7 @@
     : [];
 
   const handleRefreshConnections = () => {
-    for (const conid of $openedConnections) {
-      apiCall('server-connections/refresh', { conid });
-    }
+    triggerAllConnectionsLoad();
   };
 
   const handleDropOnGroup = (data, group) => {
