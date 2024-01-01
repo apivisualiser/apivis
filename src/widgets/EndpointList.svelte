@@ -1,6 +1,6 @@
 <script lang="ts">
   import _ from 'lodash';
-  import { ApiDocProvider, useCurrentApiInfo } from '../openapi/openapidoc';
+  import { useCurrentApiInfo } from '../openapi/openapidoc';
   import WidgetsInnerContainer from './WidgetsInnerContainer.svelte';
   import EndpointAppObject from '../appobj/EndpointAppObject.svelte';
   import { currentConnection } from '../stores';
@@ -10,6 +10,7 @@
   import FontIcon from '../icons/FontIcon.svelte';
   import InlineButton from '../buttons/InlineButton.svelte';
   import CloseSearchButton from '../buttons/CloseSearchButton.svelte';
+  import { ApiDocProvider } from '../openapi/apidocprovider';
 
   let filter = '';
 
