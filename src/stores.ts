@@ -4,7 +4,7 @@ import invalidateCommands from './commands/invalidateCommands';
 import _ from 'lodash';
 import { safeJsonParse } from './utility/stringTools';
 import { getThemes } from './themes/themes';
-import type { ConnectionInfo, TabDefinition } from './utility/types';
+import type { ConnectionInfo, OpenedConnection, TabDefinition } from './utility/types';
 
 export function writableWithStorage<T>(defaultValue: T, storageName) {
   const init = localStorage.getItem(storageName);
@@ -49,7 +49,7 @@ export const visibleSelectedWidget = derived(
 );
 export const emptyConnectionGroupNames = writableWithStorage<string[]>([], 'emptyConnectionGroupNames');
 export const collapsedConnectionGroupNames = writableWithStorage([], 'collapsedConnectionGroupNames');
-export const openedConnections = writable([]);
+export const openedConnections = writable<Record<string, OpenedConnection>>({});
 export const openedSingleDatabaseConnections = writable([]);
 export const expandedConnections = writable([]);
 export const currentConnection = writable<ConnectionInfo | null>(null);
@@ -211,11 +211,11 @@ export const getCurrentConnection = () => currentConnectionValue;
 let currentSettingsValue = null;
 export const getCurrentSettings = () => currentSettingsValue || {};
 
-// let openedConnectionsValue = null;
-// openedConnections.subscribe((value) => {
-//   openedConnectionsValue = value;
-// });
-// export const getOpenedConnections = () => openedConnectionsValue;
+let openedConnectionsValue: Record<string, OpenedConnection> = {};
+openedConnections.subscribe(value => {
+  openedConnectionsValue = value;
+});
+export const getOpenedConnections = () => openedConnectionsValue;
 
 let commandsValue: any = null;
 commands.subscribe(value => {

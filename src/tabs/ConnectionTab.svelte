@@ -152,7 +152,7 @@
     }
   });
 
-  $: isConnected = $openedConnections.includes($values._id) || $openedSingleDatabaseConnections.includes($values._id);
+  $: isConnected = $values.id in $openedConnections;
 
   // $: console.log('CONN VALUES', $values);
 </script>

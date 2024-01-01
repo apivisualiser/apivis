@@ -2,12 +2,12 @@ import Dexie, { type Table } from "dexie";
 import { liveQuery } from "dexie";
 import type { ConnectionInfo, TabDefinition } from "./types";
 
-class ApiManDb extends Dexie {
+class ApiVisDb extends Dexie {
   public connections!: Table<ConnectionInfo, string>;
   // public tabs!: Table<TabDefinition, string>;
 
   public constructor() {
-    super("apiman");
+    super("apivis");
 
     this.version(1).stores({
       connections: "id",
@@ -16,7 +16,7 @@ class ApiManDb extends Dexie {
   }
 }
 
-const localDb = new ApiManDb();
+const localDb = new ApiVisDb();
 
 export function useConnectionList() {
   return liveQuery(() => localDb.connections.toArray());

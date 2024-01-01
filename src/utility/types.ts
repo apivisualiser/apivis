@@ -1,3 +1,5 @@
+import type { OpenAPIObject } from "openapi3-ts/oas30";
+
 export interface ConnectionInfo {
   id: string;
   openApiUrl: string;
@@ -16,4 +18,10 @@ export interface TabDefinition {
   tabOrder?: number;
   multiTabIndex?: number;
   unsaved?: boolean;
+}
+
+export interface OpenedConnection {
+  connection: ConnectionInfo;
+  apidoc: OpenAPIObject;
+  apidocLoaded: Date;
 }
