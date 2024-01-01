@@ -18,6 +18,8 @@ import { get } from 'svelte/store';
 // import newQuery, { newDiagram, newPerspective, newQueryDesign } from '../query/newQuery';
 // import saveTabFile from '../utility/saveTabFile';
 import openNewTab from '../utility/openNewTab';
+import { showModal } from '../modals/modalTools';
+import InputTextModal from '../modals/InputTextModal.svelte';
 // import getElectron from '../utility/getElectron';
 // import { openElectronFile } from '../utility/openElectronFile';
 // import { getDefaultFileFormat } from '../plugins/fileformats';
@@ -112,29 +114,29 @@ registerCommand({
   },
 });
 
-// registerCommand({
-//   id: 'new.connection.folder',
-//   toolbar: true,
-//   icon: 'icon add-folder',
-//   toolbarName: 'Add connection folder',
-//   category: 'New',
-//   toolbarOrder: 1,
-//   name: 'Connection',
-//   onClick: () => {
-//     showModal(InputTextModal, {
-//       value: '',
-//       label: 'New connection folder name',
-//       header: 'Create connection folder',
-//       onConfirm: async folder => {
-//         emptyConnectionGroupNames.update(names => {
-//           if (!folder) return names;
-//           if (names.includes(folder)) return names;
-//           return [...names, folder];
-//         });
-//       },
-//     });
-//   },
-// });
+registerCommand({
+  id: 'new.connection.folder',
+  toolbar: true,
+  icon: 'icon add-folder',
+  toolbarName: 'Add connection folder',
+  category: 'New',
+  toolbarOrder: 1,
+  name: 'Connection',
+  onClick: () => {
+    showModal(InputTextModal, {
+      value: '',
+      label: 'New connection folder name',
+      header: 'Create connection folder',
+      onConfirm: async folder => {
+        emptyConnectionGroupNames.update(names => {
+          if (!folder) return names;
+          if (names.includes(folder)) return names;
+          return [...names, folder];
+        });
+      },
+    });
+  },
+});
 
 registerCommand({
   id: 'new.query',

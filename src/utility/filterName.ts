@@ -20,7 +20,7 @@ function camelMatch(filter: string, text: string): boolean {
   }
 }
 
-export function filterName(filter: string, ...names: (string | FilterNameDefinition)[]) {
+export function filterName(filter: string, ...names: (string | FilterNameDefinition | undefined)[]) {
   if (!filter) return true;
 
   // const camelVariants = [name.replace(/[^A-Z]/g, '')]

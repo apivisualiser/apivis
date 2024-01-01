@@ -30,6 +30,7 @@
   import { saveConnection, useConnectionList } from '../utility/localdb';
   import AppObjectCore from '../appobj/AppObjectCore.svelte';
   import ConnectionAppObject from '../appobj/ConnectionAppObject.svelte';
+  import { filterName } from '../utility/filterName';
 
   const connections = useConnectionList();
   // const serverStatus = useServerStatus();
@@ -107,19 +108,18 @@
       { text: 'Delete', onClick: handleDelete },
     ];
   }
-
 </script>
 
 <SearchBoxWrapper>
-  <SearchInput placeholder="Search connection or database" bind:value={filter} />
+  <SearchInput placeholder="Search API connection" bind:value={filter} />
   <CloseSearchButton bind:filter />
   {#if $commandsCustomized['new.connection']?.enabled}
     <InlineButton on:click={() => runCommand('new.connection')} title="Add new connection">
       <FontIcon icon="icon plus-thick" />
     </InlineButton>
-    <InlineButton on:click={() => runCommand('new.connection.folder')} title="Add new connection folder">
+    <!-- <InlineButton on:click={() => runCommand('new.connection.folder')} title="Add new connection folder">
       <FontIcon icon="icon add-folder" />
-    </InlineButton>
+    </InlineButton> -->
   {/if}
   <InlineButton on:click={handleRefreshConnections} title="Refresh connection list">
     <FontIcon icon="icon refresh" />
@@ -133,9 +133,8 @@
     }
   }}
 >
-  {#each $connections || [] as connectionItem}
-  <ConnectionAppObject data={connectionItem} />
-    
+  {#each ($connections || []).filter(conn => filterName(filter, conn.displayName, conn.openApiUrl)) as connectionItem}
+    <ConnectionAppObject data={connectionItem} />
   {/each}
   {#if $connections && !$connections.find(x => !x.unsaved) && $openedConnections.length == 0 && $commandsCustomized['new.connection']?.enabled && !$openedTabs.find(x => !x.closedTime && x.tabComponent == 'ConnectionTab' && !x.props?.conid)}
     <LargeButton icon="icon new-connection" on:click={() => runCommand('new.connection')} fillHorizontal
