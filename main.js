@@ -29,6 +29,7 @@ const createWindow = () => {
       responseHeaders: {
         'Access-Control-Allow-Origin': ['*'],
         'Access-Control-Allow-Headers': '*',
+        'Access-Control-Allow-Methods': '*',
         ...details.responseHeaders,
       },
     });
