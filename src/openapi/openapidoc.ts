@@ -3,6 +3,7 @@ import { currentConnection } from '../stores';
 import type { Readable } from 'svelte/store';
 import { getConnection } from '../utility/localdb';
 import SwaggerClient from 'swagger-client';
+import { filterName } from '../utility/filterName';
 
 const apiDocCache = new Map<string, OpenAPIObject>();
 
@@ -59,6 +60,22 @@ export class ApiDocProvider {
     const newTag = new ApiDocTag(name);
     this.tags.push(newTag);
     return newTag;
+  }
+
+  filter(filter: string): ApiDocProvider {
+    const newProvider = new ApiDocProvider(this.apiDoc);
+    newProvider.endPoints = this.endPoints.filter(endpoint => {
+      return filterName(filter, endpoint.path);
+    });
+    newProvider.tags = this.tags.filter(tag => {
+      return filterName(filter, tag.name, ...tag.endPoints.map(endpoint => endpoint.path));
+    });
+    for(const tag of newProvider.tags) {
+      tag.endPoints = tag.endPoints.filter(endpoint => {
+        return filterName(filter, endpoint.path);
+      });
+    }
+    return newProvider;
   }
 }
 

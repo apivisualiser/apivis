@@ -5,17 +5,34 @@
   import EndpointAppObject from '../appobj/EndpointAppObject.svelte';
   import { currentConnection } from '../stores';
   import AppObjectGroup from '../appobj/AppObjectGroup.svelte';
+  import SearchBoxWrapper from '../elements/SearchBoxWrapper.svelte';
+  import SearchInput from '../elements/SearchInput.svelte';
+  import FontIcon from '../icons/FontIcon.svelte';
+  import InlineButton from '../buttons/InlineButton.svelte';
+  import CloseSearchButton from '../buttons/CloseSearchButton.svelte';
+
+  let filter = '';
 
   const apiInfo = useCurrentApiInfo();
   // $: paths = $apiInfo?.paths || {};
-  $: provider = new ApiDocProvider($apiInfo);
+  $: provider = new ApiDocProvider($apiInfo).filter(filter);
+
+  function handleRefreshConnection() {}
 </script>
+
+<SearchBoxWrapper>
+  <SearchInput placeholder="Search endpoint" bind:value={filter} />
+  <CloseSearchButton bind:filter />
+  <InlineButton on:click={handleRefreshConnection} title="Refresh endpoints">
+    <FontIcon icon="icon refresh" />
+  </InlineButton>
+</SearchBoxWrapper>
 
 <WidgetsInnerContainer>
   {#each provider.tags as tag}
     <AppObjectGroup title={tag.name}>
       {#each tag.endPoints as endpoint}
-        <EndpointAppObject endpoint={endpoint} apiInfo={$apiInfo} conid={$currentConnection?.id} />
+        <EndpointAppObject {endpoint} apiInfo={$apiInfo} conid={$currentConnection?.id} />
       {/each}
     </AppObjectGroup>
   {/each}
