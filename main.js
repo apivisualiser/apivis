@@ -28,6 +28,7 @@ const createWindow = () => {
     callback({
       responseHeaders: {
         'Access-Control-Allow-Origin': ['*'],
+        'Access-Control-Allow-Headers': '*',
         ...details.responseHeaders,
       },
     });

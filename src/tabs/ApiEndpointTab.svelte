@@ -8,6 +8,7 @@
     category: 'Endpoint',
     icon: 'icon send',
     name: 'Send',
+    keyText: 'F5',
     toolbar: true,
     isRelatedToTab: true,
     testEnabled: () => getCurrentEditor() != null,
@@ -39,6 +40,8 @@
   import LoadingInfo from '../elements/LoadingInfo.svelte';
   import TextAreaField from '../forms/TextAreaField.svelte';
   import AceEditor from '../elements/AceEditor.svelte';
+  import Link from '../elements/Link.svelte';
+  import Pager from '../elements/Pager.svelte';
 
   export let tabid;
   export let path: string;
@@ -75,6 +78,37 @@
     isSending = false;
   }
 
+  function handleFillFromSpec() {
+    const requestBody = $apiInfo?.paths[path]?.[method]?.requestBody;
+    if (requestBody) {
+      let sampleRequestBody = requestBody.content['application/json'].schema.example;
+      if (!sampleRequestBody) {
+        sampleRequestBody = {};
+        const properties = requestBody.content['application/json'].schema.properties;
+        for (const prop in properties) {
+          switch (properties[prop].type) {
+            case 'string':
+              sampleRequestBody[prop] = 'string';
+              break;
+            case 'integer':
+              sampleRequestBody[prop] = 0;
+              break;
+            case 'boolean':
+              sampleRequestBody[prop] = false;
+              break;
+            case 'array':
+              sampleRequestBody[prop] = [];
+              break;
+            case 'object':
+              sampleRequestBody[prop] = {};
+              break;
+          }
+        }
+      }
+      values.update(x => ({ ...x, $requestBody: JSON.stringify(sampleRequestBody, null, 2) }));
+    }
+  }
+
   $: console.log($apiInfo?.paths[path]?.[method]?.requestBody);
 </script>
 
@@ -86,11 +120,12 @@
           <FormTextField name={param.name} label={param.name} required={param.required} />
         {/each}
         {#if $apiInfo?.paths[path]?.[method]?.requestBody}
+          <div class="label">Request body (<Link onClick={handleFillFromSpec}>fill from spec</Link>)</div>
           <div class="editor">
             <AceEditor
               mode="json"
               value={$values.$requestBody}
-              on:input={(e) => {
+              on:input={e => {
                 values.update(x => ({ ...x, $requestBody: e.detail }));
               }}
             />
@@ -183,5 +218,12 @@
     height: 30vh;
     display: flex;
     position: relative;
+    margin: var(--dim-large-form-margin);
+    margin-top: 3px;
+  }
+
+  .label {
+    margin-left: var(--dim-large-form-margin);
+    color: var(--theme-font-3);
   }
 </style>

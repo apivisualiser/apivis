@@ -8,6 +8,11 @@ export interface ApiRequestResponse {
   error?: string;
 }
 
+function extractRequestBody(values: Record<string, any>) {
+  const body = values.$requestBody;
+  return body;
+}
+
 export async function sendApiRequest(
   conid: string,
   path: string,
@@ -42,7 +47,22 @@ export async function sendApiRequest(
     }
 
     url.search = params.toString();
-    const resp = await fetch(url.toString());
+
+    const bodyIsAllowed = ['post', 'put', 'patch'].includes(method);
+
+    const headers = {
+      Accept: 'application/json',
+      Origin: '*',
+    };
+    if (bodyIsAllowed) {
+      headers['Content-Type'] = 'application/json';
+    }
+
+    const resp = await fetch(url.toString(), {
+      method,
+      headers,
+      body: bodyIsAllowed && values.$requestBody ? extractRequestBody(values) : undefined,
+    });
     const text = await resp.text();
 
     try {
