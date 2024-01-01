@@ -42,6 +42,7 @@
   import AceEditor from '../elements/AceEditor.svelte';
   import Link from '../elements/Link.svelte';
   import Pager from '../elements/Pager.svelte';
+  import InfoMessage from '../elements/InfoMessage.svelte';
 
   export let tabid;
   export let path: string;
@@ -136,12 +137,12 @@
       {#if resp}
         <TabControl
           tabs={[
+            resp?.json && { label: 'JSON', slot: 1 },
             ..._.keys(allArrays).map(key => ({
               label: `${key} (${allArrays[key].length})`,
               slot: 2,
               props: { rows: allArrays[key] },
             })),
-            resp?.json && { label: 'JSON', slot: 1 },
             resp?.html && { label: 'HTML', slot: 3 },
             resp?.text && { label: 'Text', slot: 4 },
             resp?.error && { label: 'Error', slot: 5 },
@@ -182,10 +183,7 @@
       {:else if isSending}
         <LoadingInfo message="Sending request..." />
       {:else}
-        <div class="m-4 flex info-container">
-          <span class="info-icon mr-2"><FontIcon icon="img info" /></span> Please use "Send" button for sending request to
-          API
-        </div>
+        <InfoMessage message="Please use 'Send' button for sending request to API" />
       {/if}
     </div>
   </FormProviderCore>
@@ -204,14 +202,6 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-  }
-
-  .info-icon {
-    font-size: 34px;
-  }
-
-  .info-container {
-    align-items: center;
   }
 
   .editor {

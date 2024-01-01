@@ -1,9 +1,9 @@
 <script lang="ts">
   import _ from 'lodash';
   import DataGridCell from './DataGridCell.svelte';
+  import InfoMessage from '../elements/InfoMessage.svelte';
 
   export let rows: any;
-
 
   // function extractTopmostRows(data) {
   //   if (_.isArray(data)) {
@@ -23,28 +23,34 @@
   $: columns = _.uniq(_.flatMap(rows, Object.keys));
 </script>
 
-<div class="wrapper">
-  <table>
-    <thead>
-      <tr>
-        <th></th>
-        {#each columns as key}
-          <th>{key}</th>
-        {/each}
-      </tr>
-    </thead>
-    <tbody>
-      {#each rows as row, index}
+{#if rows.length === 0}
+  <div>
+    <InfoMessage message="No rows" />
+  </div>
+{:else}
+  <div class="wrapper">
+    <table>
+      <thead>
         <tr>
-          <td>{index + 1}</td>
+          <th></th>
           {#each columns as key}
-            <DataGridCell rowData={row} value={row[key]} />
+            <th>{key}</th>
           {/each}
         </tr>
-      {/each}
-    </tbody>
-  </table>
-</div>
+      </thead>
+      <tbody>
+        {#each rows as row, index}
+          <tr>
+            <td>{index + 1}</td>
+            {#each columns as key}
+              <DataGridCell rowData={row} value={row[key]} />
+            {/each}
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  </div>
+{/if}
 
 <style>
   .wrapper {
