@@ -8,7 +8,7 @@
     category: 'Endpoint',
     icon: 'icon send',
     name: 'Send',
-    keyText: 'F5',
+    keyText: 'F5|CtrlOrCommand+Enter',
     toolbar: true,
     isRelatedToTab: true,
     testEnabled: () => getCurrentEditor() != null,
