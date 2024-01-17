@@ -9,6 +9,9 @@ const createWindow = () => {
     height: 600,
     title: 'ApiMan',
 
+    webPreferences: {
+      webSecurity: false
+    }
     // webPreferences: {
     //   preload: path.join(__dirname, 'preload.js')
     // }
@@ -20,20 +23,26 @@ const createWindow = () => {
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 
-  // simulate CORS
-  mainWindow.webContents.session.webRequest.onBeforeSendHeaders((details, callback) => {
-    callback({ requestHeaders: { Origin: '*', ...details.requestHeaders } });
-  });
-  mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
-    callback({
-      responseHeaders: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': '*',
-        'Access-Control-Allow-Methods': '*',
-        ...details.responseHeaders,
-      },
-    });
-  });
+  // // simulate CORS
+  // mainWindow.webContents.session.webRequest.onBeforeSendHeaders((details, callback) => {
+  //   callback({
+  //     requestHeaders: {
+  //       ...details.requestHeaders,
+  //       Origin: ['*'],
+  //     },
+  //   });
+  // });
+  // mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
+  //   callback({
+  //     responseHeaders: {
+  //       ...details.responseHeaders,
+  //       'Access-Control-Allow-Origin': ['*'],
+  //       'Access-Control-Allow-Headers': ['*'],
+  //       'Access-Control-Allow-Methods': ['*'],
+  //       'Access-Control-Allow-Credentials': true
+  //     },
+  //   });
+  // });
 
   mainWindow.maximize();
 };

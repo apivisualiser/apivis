@@ -152,7 +152,7 @@
     }
   });
 
-  $: isConnected = $values.id in $openedConnections;
+  $: isConnected = $values.id && $values.id in $openedConnections;
 
   // $: console.log('CONN VALUES', $values);
 </script>

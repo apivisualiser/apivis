@@ -10,10 +10,10 @@
 <td
   bind:this={domCell}
   on:click={() => {
-    // const range = document.createRange();
-    // range.selectNode(domCell);
-    // window.getSelection()?.removeAllRanges();
-    // window.getSelection()?.addRange(range);
+    const range = document.createRange();
+    range.selectNode(domCell);
+    window.getSelection()?.removeAllRanges();
+    window.getSelection()?.addRange(range);
   }}
 >
   <CellValue {rowData} {value} />
