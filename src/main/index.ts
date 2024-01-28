@@ -13,6 +13,7 @@ function createWindow(): void {
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
+      webSecurity: false,
       sandbox: false
     }
   })
@@ -34,6 +35,13 @@ function createWindow(): void {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
 }
+
+app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
+  // Prevent having error
+  event.preventDefault();
+  // and continue
+  callback(true);
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
