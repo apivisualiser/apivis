@@ -1,47 +1,61 @@
 <script lang="ts">
-  import _ from 'lodash';
-  import DropDownButton from '../buttons/DropDownButton.svelte';
+  import _ from 'lodash'
+  import DropDownButton from '../buttons/DropDownButton.svelte'
 
   interface TabDef {
-    label: string;
-    slot?: number;
-    component?: any;
-    props?: any;
+    label: string
+    slot?: number
+    component?: any
+    props?: any
   }
 
-  export let tabs: TabDef[];
-  export let value = 0;
-  export let menu = null;
-  export let isInline = false;
-  export let containerMaxWidth = undefined;
-  export let flex1 = true;
+  export let tabs: TabDef[]
+  export let value = 0
+  export let menu = null
+  export let isInline = false
+  export let containerMaxWidth = undefined
+  export let flex1 = true
 
   export function setValue(index) {
-    value = index;
+    value = index
   }
   export function getValue() {
-    return value;
+    return value
   }
 </script>
 
 <div class="main" class:flex1>
-  <div class="tabs">
-    {#each _.compact(tabs) as tab, index}
-      <div class="tab-item" class:selected={value == index} on:click={() => (value = index)}>
-        <span class="ml-2">
-          {tab.label}
-        </span>
-      </div>
-    {/each}
-    {#if menu}
-      <DropDownButton {menu} />
-    {/if}
+  <div class="tabs-container">
+    <div class="tabs">
+      {#each _.compact(tabs) as tab, index}
+        <div class="tab-item" class:selected={value == index} on:click={() => (value = index)}>
+          <span class="ml-2">
+            {tab.label}
+          </span>
+        </div>
+      {/each}
+      {#if menu}
+        <DropDownButton {menu} />
+      {/if}
+    </div>
+    <div>
+      <slot name="tabs-right" />
+    </div>
   </div>
 
   <div class="content-container">
     {#each _.compact(tabs) as tab, index}
-      <div class="container" class:isInline class:tabVisible={index == value} style:max-width={containerMaxWidth}>
-        <svelte:component this={tab.component} {...tab.props} tabControlHiddenTab={index != value} />
+      <div
+        class="container"
+        class:isInline
+        class:tabVisible={index == value}
+        style:max-width={containerMaxWidth}
+      >
+        <svelte:component
+          this={tab.component}
+          {...tab.props}
+          tabControlHiddenTab={index != value}
+        />
         {#if tab.slot != null}
           {#if tab.slot == 0}<slot name="0" {...tab.props} />
           {:else if tab.slot == 1}<slot name="1" {...tab.props} />
@@ -72,7 +86,6 @@
     display: flex;
     height: var(--dim-tabs-height);
     right: 0;
-    background-color: var(--theme-bg-2);
   }
 
   .tab-item {
@@ -111,5 +124,13 @@
 
   .container.isInline:not(.tabVisible) {
     display: none;
+  }
+
+  .tabs-container {
+    background-color: var(--theme-bg-2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 15px;
   }
 </style>
