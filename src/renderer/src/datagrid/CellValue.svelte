@@ -33,6 +33,7 @@
 <script lang="ts">
   import _ from 'lodash';
   import { arrayToHexString } from '../utility/stringTools';
+  import JSONTree from '../jsontree/JSONTree.svelte'
 
   export let rowData;
   export let value;
@@ -70,21 +71,25 @@
 {:else if value.$oid}
   <span class="value">ObjectId("{value.$oid}")</span>
 {:else if _.isPlainObject(value)}
-  {@const svalue = JSON.stringify(value, undefined, 2)}
+  <JSONTree {value} />
+<!-- {@const svalue = JSON.stringify(value, undefined, 2)}
   <span class="null" title={svalue}
     >{#if svalue.length < 100}{JSON.stringify(value)}{:else}(JSON){/if}</span
-  >
+  > -->
 {:else if _.isArray(value)}
-  <span class="null" title={value.map(x => JSON.stringify(x)).join('\n')}>[{value.length} items]</span>
+  <JSONTree {value} />
+  <!-- <span class="null" title={value.map(x => JSON.stringify(x)).join('\n')}>[{value.length} items]</span> -->
 {:else if _.isPlainObject(jsonParsedValue)}
-  {@const svalue = JSON.stringify(jsonParsedValue, undefined, 2)}
+  <JSONTree value={jsonParsedValue} />
+<!-- {@const svalue = JSON.stringify(jsonParsedValue, undefined, 2)}
   <span class="null" title={svalue}
     >{#if svalue.length < 100}{JSON.stringify(jsonParsedValue)}{:else}(JSON){/if}</span
-  >
+  > -->
 {:else if _.isArray(jsonParsedValue)}
-  <span class="null" title={jsonParsedValue.map(x => JSON.stringify(x)).join('\n')}
+  <JSONTree value={jsonParsedValue} />
+  <!-- <span class="null" title={jsonParsedValue.map(x => JSON.stringify(x)).join('\n')}
     >[{jsonParsedValue.length} items]</span
-  >
+  > -->
 {:else}
   {value.toString()}
 {/if}
